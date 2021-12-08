@@ -1,0 +1,57 @@
+di_contah trem_X eh 10
+di_contah trem_Y
+di_midih  trem_B eh 3.7
+di_midih  trem_A eh 1.5
+di_vera   trem_R eh v
+di_vera   trem_S eh f	                       oia Pikachu!!!#@%"'~
+di_prosa  trem_P eh "Pikachu"    		oia string com tabs
+
+espiah_soh("Insira um valor inteiro")
+xove(trem_Y)
+
+espiah_soh((v ou trem_R) i (trem_S capaz neim trem_R))
+
+di_midih trem_C eh trem_B ajunta trem_A
+di_midih trem_D eh trem_C
+
+espiah_soh("TREM C: ", trem_C)
+espiah_soh("TREM D: ", trem_D)
+
+trem_C mais_um_cadin
+trem_D menos_um_cadin
+
+espiah_soh("TREM C: ", trem_C)
+espiah_soh("TREM D: ", trem_D)
+
+trem_Y eh trem_X veiz 10
+espiah_soh(trem_Y)
+
+di_vera trem_T eh ((trem_A maioh_qui_nem trem_B) qui_nem (trem_X menoh_qui_nem trem_Y))
+di_vera trem_U eh ((trem_A dimais_da_conta trem_B) num_eh (trem_X dimenos_da_conta trem_Y))
+espiah_soh(trem_T)
+espiah_soh(trem_U)
+
+espiah_soh(30 arranca 20)
+espiah_soh((40.0 cascah 3.0) sobra 2)
+
+tem_cabimento(trem_X maioh trem_Y){
+    trem_X eh trem_Y
+}
+e_tem_cabimento(trem_X menoh trem_Z){
+    trem_X eh trem_Z
+}
+nao_tem_cabimento{
+    trem_X eh trem_Y ajunta trem_Z
+}
+espiah_soh(trem_X)
+
+vai_toda_vida{
+	trem_A mais_um_cadin
+	tem_cabimento(trem_A qui_nem trem_X){
+		espia_soh(“A eh igual a X.”)
+		pica_mula
+	}
+}
+
+oia acabou
+
