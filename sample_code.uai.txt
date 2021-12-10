@@ -40,7 +40,7 @@ tem_cabimento(trem_X maioh trem_Y){
 e_tem_cabimento(trem_X menoh trem_Z){
     trem_X eh trem_Z
 }
-nao_tem_cabimento{
+num_tem_cabimento{
     trem_X eh trem_Y ajunta trem_Z
 }
 espiah_soh(trem_X)
@@ -48,7 +48,7 @@ espiah_soh(trem_X)
 vai_toda_vida{
 	trem_A mais_um_cadin
 	tem_cabimento(trem_A qui_nem trem_X){
-		espia_soh(“A eh igual a X.”)
+		espiah_soh("A eh igual a X.")
 		pica_mula
 	}
 }
