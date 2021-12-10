@@ -8,10 +8,13 @@ def get_token(line, token_list, line_number):
     token_candidate = line.split(' ', 1)[0]
     token_candidate = token_candidate.split('(', 1)[0]
     token_candidate = token_candidate.split(')', 1)[0]
-    token_candidate = token_candidate.split('(', 1)[0]
-    token_candidate = token_candidate.split(')', 1)[0]
+    token_candidate = token_candidate.split('{', 1)[0]
+    token_candidate = token_candidate.split('}', 1)[0]
+    token_candidate = token_candidate.split('\n', 1)[0]
+    token_candidate = token_candidate.split('\t', 1)[0]
 
-    print('token_candidate: -' + token_candidate + '-')
+
+    #print('token_candidate: -' + token_candidate + '-')
 
     if token_candidate[0] == 'a':
         if token_candidate[1:] == 'junta':
@@ -53,7 +56,7 @@ def get_token(line, token_list, line_number):
         elif token_candidate[1:] == '_tem_cabimento':
             token_list.append(['elif', token_candidate])
             return 0
-        elif token_candidate[1:] == 'spia_soh':
+        elif token_candidate[1:] == 'spiah_soh':
             token_list.append(['print', token_candidate])
             return 0
         else:
@@ -142,7 +145,7 @@ def get_token(line, token_list, line_number):
             token_list.append(['erro', token_candidate, line_number])
             return -1
 
-    elif token_candidate == 'sobra':
+    elif token_candidate == 'xove':
         token_list.append(['input', token_candidate])
         return 0
 
@@ -150,10 +153,11 @@ def get_token(line, token_list, line_number):
         return -1  
         
 
-
+"""
 if __name__ == '__main__':
     line = 'di_contah trem_X eh 10'
     token_list = []
     line_number = 42
     print(get_token(line, token_list, line_number))
     print(token_list)
+"""
