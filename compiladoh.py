@@ -1,24 +1,31 @@
 from get_token import get_token 
 
-letras = ['a','c','d','e','f','i','m','n','o','p','q','s','t','v','x']
+write_to_file = True
 symbols = ['{','}','(',')',',']
 token_list = []
 
-
 def get_number(line, line_number):
     is_real = False
+    line_finished = True
     for idx in range(len(line[1:])):
         if line[idx].isnumeric():
             continue
         elif line[idx] == '.' and not is_real:
             is_real = True
         else:
+            line_finished = False
             break
 
-    if is_real:
-        token_list.append(['real', line[:idx+1]])
+    if line_finished:
+        if is_real:
+            token_list.append(['real', line[:idx+1]])
+        else:
+            token_list.append(['int', line[:idx+1]])
     else:
-        token_list.append(['int', line[:idx+1]])
+        if is_real:
+            token_list.append(['real', line[:idx]])
+        else:
+            token_list.append(['int', line[:idx]])
     
     pass
 
@@ -40,11 +47,15 @@ def check_line(line, line_number):
     new_token = False
     new_token_idx = 0
     for idx in range(len(line)):
+        #prints para debuggar
         #print(f"idx: {idx} char: {line[idx]} new_token: {new_token}")
         #print(token_list)
+
         if not new_token:
-            if line[idx] in letras:
-                get_token(line[idx:], token_list, line_number)
+            if line[idx].isalpha():
+                status = get_token(line[idx:], token_list, line_number)
+                if status == -1:
+                    print(f"ERRO NA LINHA {line_number}. Símbolo não reconhecido pela linguagem: {token_list[-1][1]}")
                 if token_list[-1][0]=='oia':
                     break
                 elif len(token_list[-1][1])!=1:
@@ -52,8 +63,9 @@ def check_line(line, line_number):
                     new_token_idx = 1
             elif line[idx].isnumeric():
                 get_number(line[idx:], line_number)
-                new_token = True
-                new_token_idx = 1                
+                if len(token_list[-1][1])!=1:
+                    new_token = True
+                    new_token_idx = 1                
             elif line[idx] == "'" or line[idx]=='"':
                 get_string(line[idx:], line_number)==0
                 new_token = True
@@ -68,9 +80,7 @@ def check_line(line, line_number):
         
         else: 
         #é um new_token
-            #print(f"new_token_idx: {new_token_idx}")
             if line[idx] == token_list[-1][1][new_token_idx]:
-                #print("entrou no if")
             #if que percorre tokens já adicionados à lista
                 if new_token_idx==len(token_list[-1][1])-1:
                     new_token = False
@@ -78,16 +88,45 @@ def check_line(line, line_number):
                 else:
                     new_token_idx += 1
             else:
-                #print("ERRO")
+                print("ERRO DESCONHECIDO.")
                 pass
         
-source_code = open("sample_code.uai.txt")
+if __name__ == '__main__':
+    print("Insira o nome do arquivo .txt a ser analisado lexicamente")
+    print("Ex: sample_code.uai.txt")
 
-#line = source_code.readline()
-#check_line(line,1)
+    source_code_file = input()
+    source_code = open(source_code_file)
 
-line_number = 1
-for line in source_code:
-    check_line(line,line_number)
-    line_number+=1
-    print(token_list)
+    print("Deseja visualizar os tokens no terminal ou em um arquivo?")
+    print("Arquivo: 0, Terminal: 1")
+    option = input()
+    
+    while option != '0' and option!='1':
+        print("Opção não reconhecida.")
+        print("Deseja visualizar os tokens no terminal ou em um arquivo?")
+        print("Arquivo: 0, Terminal: 1")
+        option = input()
+
+    line_number = 1
+    for line in source_code:
+        check_line(line,line_number)
+        line_number+=1
+
+    idx = 0
+    for i in range(len(token_list)):
+        if token_list[idx][0] == 'erro':
+            token_list.pop(idx)
+        else:
+            idx+=1
+
+    if option=='0':
+        f = open("tokens.txt", "w")
+        for token in token_list:
+            f.write(str(token)+"\n")
+        f.close
+    else:
+        for token in token_list:
+            print(str(token))
+    
+    print("-"*5+"Análise léxica finalizada!"+"-"*5)
