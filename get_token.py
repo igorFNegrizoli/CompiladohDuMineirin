@@ -9,10 +9,10 @@ def get_token(line, token_list, line_number):
 
     if token_candidate[0] == 'a':
         if token_candidate[1:] == 'junta':
-            token_list.append(['OpAritBin', token_candidate])
+            token_list.append(['opAritBin', token_candidate])
             return 0
         elif token_candidate[1:] == 'rranca':
-            token_list.append(['OpAritBin', token_candidate])
+            token_list.append(['opAritBin', token_candidate])
             return 0
         else:
             token_list.append(['erro', token_candidate, line_number])
@@ -20,10 +20,10 @@ def get_token(line, token_list, line_number):
 
     elif token_candidate[:2] == 'ca':
         if token_candidate[2:] == 'paz':
-            token_list.append(['OpLogBin', token_candidate])
+            token_list.append(['opLogBin', token_candidate])
             return 0
         elif token_candidate[2:] == 'scah':
-            token_list.append(['OpAritBin', token_candidate])
+            token_list.append(['opAritBin', token_candidate])
             return 0
         else:
             token_list.append(['erro', token_candidate, line_number])
