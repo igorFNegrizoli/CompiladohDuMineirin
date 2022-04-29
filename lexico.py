@@ -91,22 +91,24 @@ def check_line(line, line_number):
                 print("ERRO DESCONHECIDO.")
                 pass
         
-if __name__ == '__main__':
-    print("Insira o nome do arquivo .txt a ser analisado lexicamente")
-    print("Ex: sample_code.uai.txt")
+def lexico(ask_input, source_code_file, option):
+    if ask_input:
+        print("Insira o nome do arquivo .uai a ser analisado lexicamente")
+        print("Ex: sample_code.uai")
 
-    source_code_file = input()
-    source_code = open(source_code_file)
+        source_code_file = input()
 
-    print("Deseja visualizar os tokens no terminal ou em um arquivo?")
-    print("Arquivo: 0, Terminal: 1")
-    option = input()
-    
-    while option != '0' and option!='1':
-        print("Opção não reconhecida.")
         print("Deseja visualizar os tokens no terminal ou em um arquivo?")
         print("Arquivo: 0, Terminal: 1")
         option = input()
+    
+        while option != '0' and option!='1':
+            print("Opção não reconhecida.")
+            print("Deseja visualizar os tokens no terminal ou em um arquivo?")
+            print("Arquivo: 0, Terminal: 1")
+            option = input()
+
+    source_code = open(source_code_file)
 
     line_number = 1
     for line in source_code:
@@ -129,4 +131,7 @@ if __name__ == '__main__':
         for token in token_list:
             print(str(token))
     
-    print("-"*5+"Análise léxica finalizada!"+"-"*5)
+    print("-"*6+"Análise léxica finalizada!"+"-"*7)
+
+if __name__ == '__main__':
+    lexico(True, "", "")
