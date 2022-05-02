@@ -61,40 +61,48 @@ def read_token_file(token_list):
     f = open("tokens.txt")
 
     for line in f:
-        token_end=2
-        for char in line[2:-2]:
+        token_end = 2
+        for char in line[token_end:-2]:
             if char=="'":
                 break
             token_end+=1
-
         token = line[2:token_end]
-        value = line[token_end+4:-3]
 
-        token_list.append([token,value])
+        value_end = token_end+4
+        for idx in range(len(line)-2, value_end, -1):
+            if line[idx]=="'":
+                value_end = idx
+                break
+        value = line[token_end+4:value_end]
 
-    token_list.append(['$',''])
+        line_number_start = value_end
+        for char in line[line_number_start:-2]:
+            if char==",":
+                break
+            line_number_start+=1
+        line_number = line[line_number_start+2:-2]
+
+        token_list.append([token, value, line_number])
+
+    token_list.append(['$','$', token_list[-1][2]])
 
 def empilha(pilha, num_celula, a):
     pilha.append(a)
     pilha.append(num_celula)
 
 def reduz(pilha, num_celula, tabela_df):
-    #print("-"*10)
-    #print("DENTRO DA FUNCAO")
     pilha = pilha[:-producoes[num_celula][1]]   #desempilha 2*|B|
-    #print(pilha)
+
     s = pilha[-1]              #s é topo da pilha
-    #print(s)
+
     pilha.append(producoes[num_celula][0])  #empilha A
     
     desvio = int(tabela_df.iloc[s][producoes[num_celula][0]])
-    #print(desvio)
+
     pilha.append(desvio)        #empilha desvio
 
-    #print(pilha)
-    #print("-"*10)
-
     return pilha
+
 def sintatico():
 
     token_list = []
@@ -112,8 +120,7 @@ def sintatico():
         a = token_value_pair[0]         #token lido do par
 
         celula = tabela_df.iloc[int(s)][a]
-        #print(f"s = {s}, a = {a}, index = {i}")
-        #print(celula)
+
         cod_acao = celula[0]
         
         if cod_acao == 'E':
@@ -124,10 +131,21 @@ def sintatico():
             num_celula = int(celula[1:])
             pilha = reduz(pilha, num_celula, tabela_df)
         elif cod_acao == 'A':
-            print("-"*5+"Análise sintática finalizada!"+"-"*5)
             i += 1
+        elif cod_acao == 'X':
+            i += 1
+            print(f"ERRO NA LINHA {token_value_pair[2]}: símbolo {token_value_pair[1]} inesperado.")
+        elif cod_acao == 'Z':
+            print(f"ERRO NA LINHA {token_value_pair[2]}: Símbolo {token_value_pair[1]} inesperado.")
+            num_celula = int(celula[1:])
+            pilha = reduz(pilha, num_celula, tabela_df)
+        elif cod_acao == 'W':
+            i += 1
+            print(f"ERRO NA LINHA {token_value_pair[2]}: Símbolo {token_value_pair[1]} inesperado. {celula[1:]} esperado.")
         else:
-            print("ERROU!")
+            print("ERRO NO COMPILADOR!")
+        
+    print("-"*5+"Análise sintática finalizada!"+"-"*5)
 
 if __name__ == '__main__':
     sintatico()      

@@ -18,14 +18,14 @@ def get_number(line, line_number):
 
     if line_finished:
         if is_real:
-            token_list.append(['real', line[:idx+1]])
+            token_list.append(['real', line[:idx+1], line_number])
         else:
-            token_list.append(['int', line[:idx+1]])
+            token_list.append(['int', line[:idx+1], line_number])
     else:
         if is_real:
-            token_list.append(['real', line[:idx]])
+            token_list.append(['real', line[:idx], line_number])
         else:
-            token_list.append(['int', line[:idx]])
+            token_list.append(['int', line[:idx], line_number])
     
     pass
 
@@ -37,10 +37,10 @@ def get_string(line, line_number):
 
     if quote_idx == 0:
         print(f"ERRO NA LINHA {line_number}. Fechamento de aspas não encontrado.")
-        token_list.append(['erro', line])
+        token_list.append(['erro', line, line_number])
         return -1
     else:
-        token_list.append(['string', line[:quote_idx+1]])
+        token_list.append(['string', line[:quote_idx+1], line_number])
         return 0
 
 def check_line(line, line_number):
@@ -72,7 +72,7 @@ def check_line(line, line_number):
                 new_token_idx = 1
                 
             elif line[idx] in symbols:
-                token_list.append([line[idx],''])
+                token_list.append([line[idx], line[idx], line_number])
             elif line[idx] == ' ' or line[idx] == '\t' or line[idx]=='\n':
                 continue
             else:
