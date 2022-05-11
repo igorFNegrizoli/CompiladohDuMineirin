@@ -168,10 +168,7 @@ def sintatico():
             pilha = reduz(pilha, num_celula, tabela_df)
         elif cod_acao == 'W':
             i += 1
-            if celula[1:] == '$':
-                print(f"ERRO NA LINHA {token_value_pair[2]}: Símbolo {token_value_pair[1]} inesperado.")
-            else:
-                print(f"ERRO NA LINHA {token_value_pair[2]}: Símbolo {token_value_pair[1]} inesperado. {dicionario_tokens[celula[1:]]} faltante.")
+            print(f"ERRO NA LINHA {token_value_pair[2]}: Símbolo {token_value_pair[1]} inesperado. {dicionario_tokens[celula[1:]]} faltante.")
         else:
             print("ERRO NO COMPILADOR!")
         

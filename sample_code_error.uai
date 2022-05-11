@@ -11,12 +11,11 @@ xove(trem_Y)
 
 espiah_soh((v ou trem_R) i (trem_S capaz (neim trem_R)))
 
-di_midih trem_C
-trem_C eh trem_B ajunta trem_A
+di_midih trem_C eh trem_B
 di_midih trem_D eh trem_C
 
 espiah_soh("TREM C: ", trem_C)
-espiah_soh("TREM D: ",, trem_D)
+espiah_soh("TREM D: ", trem_D)
 
 trem_C eh trem_C mais_um_cadin
 trem_D eh trem_D menos_um_cadin
@@ -25,12 +24,12 @@ espiah_soh("TREM C: ", trem_C)
 espiah_soh("TREM D: ", trem_D)
 
 trem_Y eh trem_X veiz 10
-espiah_soh(trem_Y),
-""
+espiah_soh(trem_Y)
+
 di_vera trem_T 
 di_vera trem_U 
 trem_U eh (trem_A dimais_da_conta trem_B) num_eh (trem_X dimenos_da_conta trem_Y)
-espiah_soh((trem_T))
+espiah_soh(trem_T)
 espiah_soh(trem_U)
 
 espiah_soh(30 arranca 20)
