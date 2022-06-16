@@ -35,7 +35,9 @@ espiah_soh(trem_T)
 espiah_soh(trem_U)
 
 espiah_soh(30 arranca 20)
-espiah_soh((40.0 cascah 3.0) sobra 2)
+espiah_soh((40 cascah 3) sobra 2)
+
+di_contah trem_Z eh 10000
 
 tem_cabimento(trem_X maioh trem_Y){
     trem_X eh trem_Y

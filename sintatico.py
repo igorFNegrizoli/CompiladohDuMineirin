@@ -1,60 +1,60 @@
 import pandas as pd
 
 producoes = {
-    0:['X', 2],
-    1:['A', 4],
-    2:['A', 2],
-    3:['B', 2],
-    4:['B', 2],
-    5:['B', 2],
-    6:['B', 2],
-    7:['B', 2],
-    8:['B', 2],
-    9:['B', 2],
-    10:['C', 4],
-    11:['D', 2],
-    12:['D', 2],
-    13:['E', 6],
-    14:['E', 6],
-    15:['F', 2],
-    16:['F', 2],
-    17:['F', 2],
-    18:['G', 2],
-    19:['G', 2],
-    20:['H', 16],
-    21:['H', 14],
-    22:['I', 6],
-    23:['I', 6],
-    24:['I', 10],
-    25:['I', 4],
-    26:['J', 6],
-    27:['J', 2],
-    28:['J', 2],
-    29:['L', 2],
-    30:['L', 2],
-    31:['M', 16],
-    32:['M', 8],
-    33:['N', 2],
-    34:['N', 6],
-    35:['N', 6],
-    36:['O', 10],
-    37:['O', 6],
-    38:['O', 6],
-    39:['O', 8],
-    40:['O', 4],
-    41:['O', 4],
-    42:['P', 6],
-    43:['P', 2],
-    44:['P', 2],
-    45:['R', 8],
-    46:['S', 8],
-    47:['S', 8],
-    48:['T', 2],
-    49:['T', 6],
-    50:['T', 2],
-    51:['U', 2],
-    52:['U', 2],
-    53:['U', 2]
+    0: ['X', 2, ''],
+    1: ['A', 4, ''],
+    2: ['A', 2, ''],
+    3: ['B', 2, ''],
+    4: ['B', 2, ''],
+    5: ['B', 2, ''],
+    6: ['B', 2, ''],
+    7: ['B', 2, ''],
+    8: ['B', 2, ''],
+    9: ['B', 2, 'A'],
+    10:['C', 4, ''],
+    11:['D', 2, 'B'],
+    12:['D', 2, ''],
+    13:['E', 6, 'C'],
+    14:['E', 6, 'C'],
+    15:['F', 2, 'L'],
+    16:['F', 2, 'L'],
+    17:['F', 2, 'L'],
+    18:['G', 2, 'L'],
+    19:['G', 2, 'L'],
+    20:['H', 16, ''],
+    21:['H', 14, ''],
+    22:['I', 6, 'G'],
+    23:['I', 6, 'G'],
+    24:['I', 10, 'F'],
+    25:['I', 4, 'H'],
+    26:['J', 6, 'M'],
+    27:['J', 2, 'L'],
+    28:['J', 2, 'L'],
+    29:['L', 2, 'L'],
+    30:['L', 2, 'L'],
+    31:['M', 16, ''],
+    32:['M', 8 , ''],
+    33:['N', 2 , ''],
+    34:['N', 6, 'E'],
+    35:['N', 6, 'E'],
+    36:['O', 10, 'F'],
+    37:['O', 6, 'G'],
+    38:['O', 6, 'G'],
+    39:['O', 8, 'I'],
+    40:['O', 4, 'J'],
+    41:['O', 4, 'J'],
+    42:['P', 6, 'M'],
+    43:['P', 2, 'L'],
+    44:['P', 2, 'L'],
+    45:['R', 8, ''],
+    46:['S', 8, ''],
+    47:['S', 8, 'D'],
+    48:['T', 2, 'L'],
+    49:['T', 6, 'K'],
+    50:['T', 2, 'L'],
+    51:['U', 2, 'L'],
+    52:['U', 2, 'L'],
+    53:['U', 2, 'L']
 }
 
 dicionario_tokens = {
@@ -85,7 +85,278 @@ dicionario_tokens = {
     "}": "}"
 }
 
+def is_bool(tipo):
+    tipos_booleanos = ['di_vera', 'bool']
+    return tipo in tipos_booleanos
 
+def is_number(tipo):
+    tipos_numericos = ['di_contah', 'di_midih', 'int', 'real']
+    return tipo in tipos_numericos
+
+def is_int(tipo):
+    tipos_inteiros = ['di_contah', 'int']
+    return tipo in tipos_inteiros
+
+def is_real(tipo):
+    tipos_reais = ['di_midih', 'real']
+    return tipo in tipos_reais
+
+def is_string(tipo):
+    tipos_string = ['di_prosa', 'string']
+    return tipo in tipos_string
+
+def is_type(tipo):
+    tipos = ['di_contah', 'di_midih', 'int', 'real', 'di_prosa', 'string', 'di_vera', 'bool']
+    return tipo in tipos
+
+def find_in_tab_simb(nome, tabela_simbolos):
+    for i in range(len(tabela_simbolos)):
+        simb = tabela_simbolos[i]
+        if nome == simb[0]:
+            return simb[1], simb[2], i
+    
+    return  '', '', -1
+
+def print_atrib_incompativel(linha):
+    print(f"ERRO NA LINHA {linha}. ATRIBUIÇÃO NÃO COMPATÍVEL PARA AS VARIÁVEIS UTILIZADAS.")
+
+def passagem_valor(var_esquerda, tipo_esquerda, var_direita, tabela_simbolos, linha, var_declarada):
+    tipo_direita, valor_direita, indice_direita = find_in_tab_simb(var_direita, tabela_simbolos)
+    indice_esq = 0
+    print(f"tipo_esq {tipo_esquerda, var_esquerda, linha}")
+    if tipo_esquerda=='':
+        print(f"tipo_esq DENTRO IF {tipo_esquerda, var_esquerda, linha}")
+        tipo_esquerda, tab_valor_esq, indice_esq = find_in_tab_simb(var_esquerda, tabela_simbolos)
+    if indice_esq == -1:
+        print(f"ERRO NA LINHA {linha}. VARIAVEL {var_esquerda} NÃO DECLARADA.")
+        return ''
+    if indice_direita == -1:
+        print(f"ERRO NA LINHA {linha}. VARIAVEL {var_direita} NÃO DECLARADA.")
+        return ''
+    else:
+        if is_string(tipo_esquerda):
+            return str(valor_direita)
+        elif is_bool(tipo_esquerda):
+            if is_bool(tipo_direita):
+                return valor_direita
+            else:
+                print_atrib_incompativel(linha)
+                return ''
+        elif is_int(tipo_esquerda):
+            if is_bool(tipo_direita):
+                print_atrib_incompativel(linha)
+                return ''
+            else:
+                return str(int(valor_direita))
+        elif is_real(tipo_esquerda):
+            if is_bool(tipo_direita):
+                print_atrib_incompativel(linha)
+                return ''
+            else:
+                return str(float(valor_direita))
+        else:
+            print(linha)
+            print(tipo_esquerda, var_direita)
+            print("ERRO NO COMPILADOR. PASSAGEM DE VALOR.")
+            return ''
+        
+def ad_tab_simb(nome, tipo, valor, tabela_simbolos, linha):
+    #print('\n')
+    #print(f"ADD: {nome, tipo, valor}")
+    #print('\n')
+
+    tipo_tab, valor_tab, i = find_in_tab_simb(nome, tabela_simbolos)
+    var_declarada = (i!=-1)
+
+    if valor[:4]=='trem':
+        valor = passagem_valor(nome, tipo, valor, tabela_simbolos, linha, var_declarada)
+
+    if not var_declarada:
+        #Adição de novo símbolo
+        tabela_simbolos.append([nome, tipo, valor])
+    else:
+        #Atualização de símbolo
+        if tipo=='':
+            tipo = tipo_tab
+        if valor=='':
+            valor = valor_tab
+        tabela_simbolos[i] = [nome, tipo, valor]
+    return '', ''
+
+def print_tipo_nao_suportado(linha, tipo, operador):
+    print(f"ERRO NA LINHA {linha}. TIPO {tipo} NÃO SUPORTADO PARA OPERAÇÃO {operador}.")
+
+def print_variavel_sem_valor(linha, nome):
+    print(f"ERRO NA LINHA {linha}. VARIAVEL {nome} NÃO TEM VALOR DECLARADO.")
+
+def bool_to_minerin(bool):
+    if bool:
+        return 'v'
+    else:
+        return 'f'
+
+def opUn(operador, valor, tipo_operando, tabela_simbolos, linha):
+    #VERIFICAR O QUE ACONTECE COM LITERAIS
+    nome = valor
+    if tipo_operando=='':
+        tipo_operando, valor, _ = find_in_tab_simb(nome, tabela_simbolos)
+        if valor == '':
+            print_variavel_sem_valor(linha, nome)
+            return '', ''
+    if operador=='neim':
+        if is_bool(tipo_operando):
+            if valor == 'v':
+                return 'f', 'bool'
+            else:
+                return 'v', 'bool'
+        else:
+            print_tipo_nao_suportado(linha, tipo_operando, operador)
+    elif operador=='mais_um_cadin':
+        if is_number(tipo_operando): 
+            if is_int(tipo_operando):
+                return str(int(valor)+1), 'int'
+            else:
+                return str(float(valor)+1.0), 'real'
+        else:
+            print_tipo_nao_suportado(linha, tipo_operando, operador)
+    elif operador=='menos_um_cadin':
+        if is_number(tipo_operando): 
+            if is_int(tipo_operando):
+                return str(int(valor)-1), 'int'
+            else:
+                return str(float(valor)-1.0), 'real'
+        else:
+            print_tipo_nao_suportado(linha, tipo_operando, operador)
+    else:
+        print("ERRO NO COMPILADOR. OPERAÇÃO UNÁRIA.")
+    
+    return '', ''
+
+def opBin(operador, valor1, valor2, tipo_valor1, tipo_valor2, tabela_simbolos, linha):
+    nome1 = valor1
+    if tipo_valor1=='':
+        tipo_valor1, valor1, _ = find_in_tab_simb(nome1, tabela_simbolos)
+        if valor1 == '':
+            print_variavel_sem_valor(linha, nome1)
+            return '', ''
+    
+    nome2 = valor2
+    if tipo_valor2=='':
+        tipo_valor2, valor2, _ = find_in_tab_simb(nome2, tabela_simbolos)
+        if valor2 == '':
+            print_variavel_sem_valor(linha, nome2)
+            return '', ''
+
+    operadores_logicos = ['i', 'ou', 'capaz']
+    operadores_aritmeticos = ['ajunta', 'arranca', 'veiz', 'cascah', 'sobra']
+    operadores_relacionais_numericos = ['maioh', 'menoh', 'maioh_qui_nem', 'menoh_qui_nem', 'dimais_da_conta', 'dimenos_da_conta']
+    operadores_relacionais = ['qui_nem', 'num_eh']
+    
+    if operador in operadores_logicos:
+        if not is_bool(tipo_valor1):
+            print_tipo_nao_suportado(linha, tipo_valor1, operador)
+        elif not is_bool(tipo_valor2):
+            print_tipo_nao_suportado(linha, tipo_valor2, operador)
+        else:
+            if operador=='i':
+                return bool_to_minerin(valor1=='v' and valor2=='v'), 'bool'
+            elif operador=='ou':
+                return bool_to_minerin(valor1=='v' or valor2=='v'), 'bool'
+            else:
+                return bool_to_minerin(valor1 != valor2), 'bool'
+    elif operador in operadores_aritmeticos:
+        if not is_number(tipo_valor1):
+            print_tipo_nao_suportado(linha, tipo_valor1, operador)
+        elif not is_number(tipo_valor2):
+            print_tipo_nao_suportado(linha, tipo_valor2, operador)
+        else:
+            if operador=='ajunta':
+                if is_int(tipo_valor1) and is_int(tipo_valor2):
+                    return str(int(valor1)+int(valor2)), 'int'
+                else:
+                    #Se uma variável é Int, converte Int para Float
+                    return str(float(valor1)+float(valor2)), 'real'
+            elif operador=='arranca':
+                if is_int(tipo_valor1) and is_int(tipo_valor2):
+                    return str(int(valor1)-int(valor2)), 'int'
+                else:
+                    #Se uma variável é Int, converte Int para Float
+                    return str(float(valor1)-float(valor2)), 'real'
+            elif operador=='veiz':
+                if is_int(tipo_valor1) and is_int(tipo_valor2):
+                    return str(int(valor1)*int(valor2)), 'int'
+                else:
+                    #Se uma variável é Int, converte Int para Float
+                    return str(float(valor1)*float(valor2)), 'real'
+            elif operador=='cascah':
+                if is_int(tipo_valor1) and is_int(tipo_valor2):
+                    return str(int(valor1)//int(valor2)), 'int'
+                else:
+                    #Se uma variável é Int, converte Int para Float
+                    return str(float(valor1)/float(valor2)), 'real'
+            else:
+                if is_int(tipo_valor1) and is_int(tipo_valor2):
+                    return str(int(valor1)%int(valor2)), 'int'
+                elif is_real(tipo_valor1):
+                    print_tipo_nao_suportado(linha, tipo_valor1, operador)
+                else:
+                    print_tipo_nao_suportado(linha, tipo_valor2, operador)
+    elif operador in operadores_relacionais_numericos:
+        if not is_number(tipo_valor1):
+            print_tipo_nao_suportado(linha, tipo_valor1, operador)
+        elif not is_number(tipo_valor2):
+            print_tipo_nao_suportado(linha, tipo_valor2, operador)
+        else:
+            if operador=='maioh':
+                return bool_to_minerin(float(valor1)>float(valor2)), 'bool'
+            elif operador=='menoh':
+                return bool_to_minerin(float(valor1)<float(valor2)), 'bool'
+            elif operador=='maioh_qui_nem':
+                return bool_to_minerin(float(valor1)>=float(valor2)), 'bool'
+            elif operador=='menoh_qui_nem':
+                return bool_to_minerin(float(valor1)<=float(valor2)), 'bool'
+            elif operador=='dimais_da_conta':
+                return bool_to_minerin(float(valor1)>(100*float(valor2))), 'bool'
+            else:
+                return bool_to_minerin(float(valor1)<(100*float(valor2))), 'bool'
+    elif operador in operadores_relacionais:
+        if is_real(tipo_valor1):
+            if is_number(tipo_valor2) or valor2.replace('.','',1).isdigit():
+                if operador=='qui_nem':
+                    return bool_to_minerin(float(valor1)==float(valor2)), 'bool'
+                elif operador=='num_eh':
+                    return bool_to_minerin(float(valor1)!=float(valor2)), 'bool'
+            else:
+                print_tipo_nao_suportado(linha, tipo_valor2, operador)
+        elif is_int(tipo_valor1):
+            if is_number(tipo_valor2) or valor2.replace('.','',1).isdigit():
+                if operador=='qui_nem':
+                    return bool_to_minerin(float(valor1)==float(valor2)), 'bool'
+                elif operador=='num_eh':
+                    return bool_to_minerin(float(valor1)!=float(valor2)), 'bool'
+            else:
+                print_tipo_nao_suportado(linha, tipo_valor2, operador)
+        else:
+            if is_number(tipo_valor2):
+                valor2 = str(float(valor2))
+            if operador=='qui_nem':
+                return bool_to_minerin(valor1==valor2), 'bool'
+            elif operador=='num_eh':
+                return bool_to_minerin(valor1!=valor2), 'bool'
+        
+    else:
+        print("ERRO NO COMPILADOR. OPERAÇÃO BINÁRIA.")
+
+    return '', ''
+        
+def concat(val1, val2):
+    return '', ''
+
+def find_while(pilha):
+    return '', ''
+
+def retorno_do_input():
+    return '', ''
 
 def read_token_file(token_list):
     f = open("tokens.txt")
@@ -116,20 +387,56 @@ def read_token_file(token_list):
 
     token_list.append(['$','$', token_list[-1][2]])
 
+def aplica_regra_semantica(pilha, tabela_simbolos, regra_semantica, linha):
+    if regra_semantica=='A':
+        return find_while(pilha)
+    elif regra_semantica=='B':
+        return ad_tab_simb(pilha[-2][1], pilha[-4][1], '', tabela_simbolos, linha)
+    elif regra_semantica=='C':
+        if is_type(pilha[-8][1]):
+            return ad_tab_simb(pilha[-6][1], pilha[-8][1], pilha[-2][1], tabela_simbolos, linha)
+        else:
+            return ad_tab_simb(pilha[-6][1], '', pilha[-2][1], tabela_simbolos, linha)
+    elif regra_semantica=='D':
+        return ad_tab_simb(pilha[-4][1], '', retorno_do_input(), tabela_simbolos, linha)
+    elif regra_semantica=='E':
+        return ad_tab_simb(pilha[-6][1], '', pilha[-2][1], tabela_simbolos, linha)
+    elif regra_semantica=='F':
+        return opBin(pilha[-4][1], pilha[-8][1], pilha[-2][1], pilha[-8][2], pilha[-2][2], tabela_simbolos, linha)
+    elif regra_semantica=='G':
+        return opBin(pilha[-4][1], pilha[-6][1], pilha[-2][1], pilha[-6][2], pilha[-2][2], tabela_simbolos, linha)
+    elif regra_semantica=='H':
+        return opUn(pilha[-4][1], pilha[-2][1], pilha[-2][2], tabela_simbolos, linha)
+    elif regra_semantica=='I':
+        return opUn(pilha[-2][1], pilha[-6][1], pilha[-6][2], tabela_simbolos, linha)
+    elif regra_semantica=='J':
+        return opUn(pilha[-2][1], pilha[-4][1], pilha[-4][2], tabela_simbolos, linha)
+    elif regra_semantica=='K':
+        return concat(pilha[-6][1], pilha[-2][1])
+    elif regra_semantica=='L':
+        return pilha[-2][1], pilha[-2][2]
+    elif regra_semantica=='M':
+        return pilha[-4][1], pilha[-4][2]
+
 def empilha(pilha, num_celula, a):
     pilha.append(a)
     pilha.append(num_celula)
 
-def reduz(pilha, num_celula, tabela_df):
-    #APLICA A REGRA SEMANTICA
+def reduz(pilha, num_celula, tabela_df, tabela_simbolos, linha):
+    #print(tabela_simbolos)
+    producao = producoes[num_celula]
+
+    regra_semantica = producao[2]
+    if regra_semantica!='':
+        value, tipo = aplica_regra_semantica(pilha, tabela_simbolos, regra_semantica, linha)
+    else:
+        value, tipo = '', ''
     
-    pilha = pilha[:-producoes[num_celula][1]]   #desempilha 2*|B|
+    pilha = pilha[:-producao[1]]   #desempilha 2*|B|
 
     s = pilha[-1]              #s é topo da pilha
-    value = ''
-    A = producoes[num_celula][0]
 
-    pilha.append([A, value])  #empilha A
+    pilha.append([producao[0], value, tipo])  #empilha A e seu valor
     
     desvio = int(tabela_df.iloc[s][producoes[num_celula][0]])
 
@@ -146,22 +453,20 @@ def sintatico():
     s = 0           #estado atual
     i = 0
 
-    #CRIAR TABELA DE SÍMBOLOS
+    tabela_simbolos = []
 
     acaba_logo = 0
 
     while(i < len(token_list)):
-        print("-"*10)
-        print(pilha)
-        acaba_logo+=1
-        if acaba_logo == 100:
-            break
-
+        print(tabela_simbolos)
         s = pilha[-1]
         token_value_pair = token_list[i]
 
         a = token_value_pair[0]         #token lido do par
         value = token_value_pair[1]     #valor lido do par
+        tipo = ''
+        if a == 'int' or a=='real' or a=='bool':
+            tipo = a
 
         celula = tabela_df.iloc[int(s)][a]
 
@@ -169,11 +474,11 @@ def sintatico():
         
         if cod_acao == 'E':
             num_celula = int(celula[1:])
-            empilha(pilha, num_celula, [a, value])
+            empilha(pilha, num_celula, [a, value, tipo])
             i += 1
         elif cod_acao == 'R':
             num_celula = int(celula[1:])
-            pilha = reduz(pilha, num_celula, tabela_df)
+            pilha = reduz(pilha, num_celula, tabela_df, tabela_simbolos, token_value_pair[2])
         elif cod_acao == 'A':
             i += 1
         elif cod_acao == 'X':
@@ -192,6 +497,7 @@ def sintatico():
         else:
             print("ERRO NO COMPILADOR!")
         
+    print(tabela_simbolos)
     print("-"*5+"Análise sintática finalizada!"+"-"*5)
 
 if __name__ == '__main__':
