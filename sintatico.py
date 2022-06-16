@@ -85,6 +85,8 @@ dicionario_tokens = {
     "}": "}"
 }
 
+
+
 def read_token_file(token_list):
     f = open("tokens.txt")
 
@@ -119,11 +121,15 @@ def empilha(pilha, num_celula, a):
     pilha.append(num_celula)
 
 def reduz(pilha, num_celula, tabela_df):
+    #APLICA A REGRA SEMANTICA
+    
     pilha = pilha[:-producoes[num_celula][1]]   #desempilha 2*|B|
 
     s = pilha[-1]              #s é topo da pilha
+    value = ''
+    A = producoes[num_celula][0]
 
-    pilha.append(producoes[num_celula][0])  #empilha A
+    pilha.append([A, value])  #empilha A
     
     desvio = int(tabela_df.iloc[s][producoes[num_celula][0]])
 
@@ -140,11 +146,22 @@ def sintatico():
     s = 0           #estado atual
     i = 0
 
+    #CRIAR TABELA DE SÍMBOLOS
+
+    acaba_logo = 0
+
     while(i < len(token_list)):
+        print("-"*10)
+        print(pilha)
+        acaba_logo+=1
+        if acaba_logo == 100:
+            break
+
         s = pilha[-1]
         token_value_pair = token_list[i]
 
         a = token_value_pair[0]         #token lido do par
+        value = token_value_pair[1]     #valor lido do par
 
         celula = tabela_df.iloc[int(s)][a]
 
@@ -152,7 +169,7 @@ def sintatico():
         
         if cod_acao == 'E':
             num_celula = int(celula[1:])
-            empilha(pilha, num_celula, a)
+            empilha(pilha, num_celula, [a, value])
             i += 1
         elif cod_acao == 'R':
             num_celula = int(celula[1:])
