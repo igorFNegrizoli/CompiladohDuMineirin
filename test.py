@@ -1,5 +1,7 @@
-x='143'
-if x.replace('.','',1).isdigit():
-    print(float(x))
-else:
-    print('erro')
+x = []
+
+linha = 2
+y=f"ERRO NA LINHA {linha}. ATRIBUIÇÃO NÃO COMPATÍVEL PARA AS VARIÁVEIS UTILIZADAS."
+x.append(y)
+print(y)
+print(x)
