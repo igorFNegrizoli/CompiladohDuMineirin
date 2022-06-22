@@ -149,23 +149,23 @@ def passagem_valor(var_esquerda, tipo_esquerda, var_direita, tabela_simbolos, li
                 print_atrib_incompativel(linha)
                 return ''
         elif is_int(tipo_esquerda):
-            if is_bool(tipo_direita):
-                print_atrib_incompativel(linha)
-                return ''
-            else:
+            if valor_direita.replace('.','',1).isdigit():
                 if valor_direita == 'input':
                     return str(valor_direita)
                 else:
                     return str(int(valor_direita))
-        elif is_real(tipo_esquerda):
-            if is_bool(tipo_direita):
+            else:
                 print_atrib_incompativel(linha)
                 return ''
-            else:
+        elif is_real(tipo_esquerda):
+            if valor_direita.replace('.','',1).isdigit():
                 if valor_direita == 'input':
                     return str(valor_direita)
                 else:
                     return str(float(valor_direita))
+            else:
+                print_atrib_incompativel(linha)
+                return ''
         else:
             buffer_semantico.append("ERRO NO COMPILADOR. PASSAGEM DE VALOR.")
             return ''
@@ -357,8 +357,10 @@ def opBin(operador, valor1, valor2, tipo_valor1, tipo_valor2, tabela_simbolos, l
             else:
                 print_tipo_nao_suportado(linha, tipo_valor2, operador)
         else:
-            if is_number(tipo_valor2):
+            if is_real(tipo_valor2):
                 valor2 = str(float(valor2))
+            elif is_int(tipo_valor2):
+                valor2 = str(int(valor2))
             if operador=='qui_nem':
                 return bool_to_minerin(valor1==valor2), 'bool'
             elif operador=='num_eh':
