@@ -1,0 +1,37 @@
+t0 = 10
+X = t0
+t1 = 3.7
+B = t1
+t2 = 1.5
+A = t2
+t3 = 1
+R = t3
+t4 = 0
+S = t4
+t5 = (string) "Pikachu"
+P = t5
+printf "Insira um valor inteiro"
+t6 = scanf
+Y = t6
+printf f
+t7 = C
+D = t7
+printf "TREM C: 5.2"
+printf "TREM D: 5.2"
+printf "TREM C: 6.2"
+printf "TREM D: 4.2"
+printf 100
+printf f
+printf v
+t8 = scanf
+RUA = t8
+printf input
+printf 1
+t9 = 10000
+Z = t9
+t10 = Y
+X = t10
+t11 = Z
+X = t11
+printf 10100
+printf "A eh igual a X."

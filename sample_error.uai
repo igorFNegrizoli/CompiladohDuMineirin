@@ -53,13 +53,18 @@ espiah_soh(trem_X)
 di_vera trem_E
 trem_E eh trem_X
 
+di_contah trem_LEO
+
 vai_toda_vida{
+	di_midih trem_IGOR
 	trem_A eh trem_A mais_um_cadin
 	tem_cabimento(trem_A qui_nem trem_X){
 		espiah_soh("A eh igual a X.")
 		pica_mula
 	}
 }
+
+di_contah trem_LEO
 
 pica_mula
 

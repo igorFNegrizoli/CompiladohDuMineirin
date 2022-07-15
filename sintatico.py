@@ -1,4 +1,7 @@
 import pandas as pd
+from os.path import exists
+
+temp_var_counter, label_var_counter = 0,0
 
 producoes = {
     0: ['X', 2, ''],
@@ -47,11 +50,11 @@ producoes = {
     43:['P', 2, 'L'],
     44:['P', 2, 'L'],
     45:['R', 8, ''],
-    46:['S', 8, ''],
+    46:['S', 8, 'N'],
     47:['S', 8, 'D'],
     48:['T', 2, 'L'],
     49:['T', 6, 'K'],
-    50:['T', 2, 'L'],
+    50:['T', 2, 'O'],
     51:['U', 2, 'L'],
     52:['U', 2, 'L'],
     53:['U', 2, 'L']
@@ -125,6 +128,7 @@ def print_atrib_incompativel(linha):
 
 def passagem_valor(var_esquerda, tipo_esquerda, var_direita, tabela_simbolos, linha, var_declarada):
     tipo_direita, valor_direita, indice_direita = find_in_tab_simb(var_direita, tabela_simbolos)
+
     indice_esq = 0
 
     if valor_direita == '':
@@ -170,9 +174,18 @@ def passagem_valor(var_esquerda, tipo_esquerda, var_direita, tabela_simbolos, li
             buffer_semantico.append("ERRO NO COMPILADOR. PASSAGEM DE VALOR.")
             return ''
         
-def ad_tab_simb(nome, tipo, valor, tabela_simbolos, linha):
+def ad_tab_simb(pilha, nome, tipo, valor, tabela_simbolos, linha):
+    for ele in pilha[::-1]:
+        if type(ele) != int:
+            if ele[0] == 'while' and tipo != '':
+                buffer_semantico.append(f"ERRO NA LINHA {linha}. VARIAVEL {nome} DECLARADA DENTRO DE LAÇO DE REPETIÇÃO.")
+                return '', ''
+    
+
     tipo_tab, valor_tab, i = find_in_tab_simb(nome, tabela_simbolos)
     var_declarada = (i!=-1)
+
+    valor_old = valor
 
     if valor[:4]=='trem':
         valor = passagem_valor(nome, tipo, valor, tabela_simbolos, linha, var_declarada)
@@ -188,6 +201,9 @@ def ad_tab_simb(nome, tipo, valor, tabela_simbolos, linha):
         #Atualização de símbolo
         if tipo=='':
             tipo = tipo_tab
+        else:
+            buffer_semantico.append(f"ERRO NA LINHA {linha}. VARIAVEL {nome} JÁ DECLARADA PREVIAMENTE.")
+            return '', ''
         if valor=='':
             valor = valor_tab
         tabela_simbolos[i] = [nome, tipo, valor]
@@ -371,8 +387,9 @@ def opBin(operador, valor1, valor2, tipo_valor1, tipo_valor2, tabela_simbolos, l
 
     return '', ''
         
-def concat(val1, val2):
-    return val1+val2, 'string'
+def concat(val1, val2, tabela_simbolos):
+    tipo1, valor1, indice1 = find_in_tab_simb(val2, tabela_simbolos)
+    return val1[:-1]+valor1+val1[-1], 'string'
 
 def find_while(pilha, linha):
     for ele in pilha[::-1]:
@@ -423,20 +440,82 @@ def checa_variavel(pilha, tabela_simbolos, linha):
 
     return pilha[-2][1], pilha[-2][2]
 
+def get_valor(operando):
+    if operando.tipo == 'bool':
+        if operando.valor == 'v':
+            operando.valor = 1
+        else:
+            operando.valor = 0
+    
+    return operando
+
+def three_add_producao_e(trem1, trem2, tabela_simbolos):
+    tipo1, valor1, indice1 = find_in_tab_simb(trem1, tabela_simbolos)
+    tipo2, valor2, indice2 = find_in_tab_simb(trem2, tabela_simbolos)
+
+    cast = ''
+    if is_int(tipo1) and (is_real(tipo2) or is_string(tipo2)):
+        cast = ' (int)'
+    elif is_real(tipo1) and (is_int(tipo2) or is_string(tipo2)):
+        cast = ' (real)'
+    elif is_string(tipo1) and not is_string(tipo2):
+        cast = ' (string)'
+
+    if indice2 == -1:
+        if trem2 == 'v':
+            valor = 1
+        elif trem2 == 'f':
+            valor = 0
+        else:
+            valor = trem2
+    else:
+        valor = trem2[5:]
+
+    global temp_var_counter
+    gen(f"t{temp_var_counter} ={cast} {valor}")
+    gen(f"{trem1[5:]} = t{temp_var_counter}")
+    temp_var_counter += 1
+
+    pass
+
+def three_add_input(trem):
+    global temp_var_counter
+    gen(f"t{temp_var_counter} = scanf")
+    gen(f"{trem[5:]} = t{temp_var_counter}")
+    temp_var_counter += 1
+
+def three_add_print(T):
+    gen(f"printf {T}")
+
+def three_add_input_trem(trem, tabela_simbolos):
+    tipo1, valor1, indice1 = find_in_tab_simb(trem, tabela_simbolos)
+    if indice1!=-1:
+        return valor1
+    else:
+        return trem
+
+def gen(linha_add):
+    with open("output_code.txt", 'a') as outuput_code: 
+        outuput_code.write(linha_add + '\n')
+
 def aplica_regra_semantica(pilha, tabela_simbolos, regra_semantica, linha):
     if regra_semantica=='A':
         return find_while(pilha, linha)
     elif regra_semantica=='B':
-        return ad_tab_simb(pilha[-2][1], pilha[-4][1], '', tabela_simbolos, linha)
+        return ad_tab_simb(pilha, pilha[-2][1], pilha[-4][1], '', tabela_simbolos, linha)
     elif regra_semantica=='C':
         if is_type(pilha[-8][1]):
-            return ad_tab_simb(pilha[-6][1], pilha[-8][1], pilha[-2][1], tabela_simbolos, linha)
+            ad_tab_simb(pilha, pilha[-6][1], pilha[-8][1], pilha[-2][1], tabela_simbolos, linha)
         else:
-            return ad_tab_simb(pilha[-6][1], '', pilha[-2][1], tabela_simbolos, linha)
+            ad_tab_simb(pilha, pilha[-6][1], '', pilha[-2][1], tabela_simbolos, linha)
+        three_add_producao_e(pilha[-6][1], pilha[-2][1], tabela_simbolos)
+        return '', ''
     elif regra_semantica=='D':
-        return ad_tab_simb(pilha[-4][1], '', 'input', tabela_simbolos, linha)
+        ad_tab_simb(pilha, pilha[-4][1], '', 'input', tabela_simbolos, linha)
+        three_add_input(pilha[-4][1])
+        return '', ''
     elif regra_semantica=='E':
-        return ad_tab_simb(pilha[-6][1], '', pilha[-2][1], tabela_simbolos, linha)
+        return ad_tab_simb(pilha, pilha[-6][1], '', pilha[-2][1], tabela_simbolos, linha)
     elif regra_semantica=='F':
         return opBin(pilha[-4][1], pilha[-8][1], pilha[-2][1], pilha[-8][2], pilha[-2][2], tabela_simbolos, linha)
     elif regra_semantica=='G':
@@ -448,11 +527,18 @@ def aplica_regra_semantica(pilha, tabela_simbolos, regra_semantica, linha):
     elif regra_semantica=='J':
         return opUn(pilha[-2][1], pilha[-4][1], pilha[-4][2], tabela_simbolos, linha)
     elif regra_semantica=='K':
-        return concat(pilha[-6][1], pilha[-2][1])
+        return concat(pilha[-6][1], pilha[-2][1], tabela_simbolos)
     elif regra_semantica=='L':
         return checa_variavel(pilha, tabela_simbolos, linha)
     elif regra_semantica=='M':
         return pilha[-4][1], pilha[-4][2]
+    elif regra_semantica=='N':
+        three_add_print(pilha[-4][1])
+        return '',''
+    elif regra_semantica=='O':
+        checa_variavel(pilha, tabela_simbolos, linha)
+        value = three_add_input_trem(pilha[-2][1], tabela_simbolos)
+        return value, 'string'
 
 def empilha(pilha, num_celula, a):
     pilha.append(a)
@@ -466,6 +552,8 @@ def reduz(pilha, num_celula, tabela_df, tabela_simbolos, linha):
         value, tipo = aplica_regra_semantica(pilha, tabela_simbolos, regra_semantica, linha)
     else:
         value, tipo = '', ''
+
+    #generate_3add
     
     pilha = pilha[:-producao[1]]   #desempilha 2*|B|
 
@@ -480,6 +568,8 @@ def reduz(pilha, num_celula, tabela_df, tabela_simbolos, linha):
     return pilha
 
 def sintatico():
+    open('output_code.txt','w').close()
+    
     token_list = []
     read_token_file(token_list)
 

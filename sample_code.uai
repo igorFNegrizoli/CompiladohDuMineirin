@@ -34,7 +34,7 @@ trem_U eh (trem_A dimais_da_conta trem_B) num_eh (trem_X dimenos_da_conta trem_Y
 espiah_soh(trem_T)
 espiah_soh(trem_U)
 
-espiah_soh(30 arranca 20)
+espiah_soh(trem_X arranca trem_Y)
 espiah_soh((40 cascah 3) sobra 2)
 
 di_contah trem_Z eh 10000
