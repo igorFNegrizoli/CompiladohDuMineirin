@@ -39,11 +39,15 @@ espiah_soh((40 cascah 3) sobra 2)
 
 di_contah trem_Z eh 10000
 
+tem_cabimento(trem_Z maioh trem_X){
+	trem_Z eh trem_Z arranca 10
+}
+
 tem_cabimento(trem_X maioh trem_Y){
     trem_X eh trem_Y
 }
-e_tem_cabimento(trem_X menoh trem_Z){
-    trem_X eh trem_Z
+e_tem_cabimento(trem_X maioh trem_Z){
+	espiah_soh(trem_R)
 }
 num_tem_cabimento{
     trem_X eh trem_Y ajunta trem_Z

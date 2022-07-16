@@ -1,12 +1,14 @@
 import pandas as pd
-from os.path import exists
 
-temp_var_counter, label_var_counter = 0,0
+temp_var_counter, label_var_counter, if_counter = 0,0,0
+label_queue = []
+gen_buffer = []
+in_block = ''
 
 producoes = {
     0: ['X', 2, ''],
-    1: ['A', 4, ''],
-    2: ['A', 2, ''],
+    1: ['A', 4, 'S'],
+    2: ['A', 2, 'S'],
     3: ['B', 2, ''],
     4: ['B', 2, ''],
     5: ['B', 2, ''],
@@ -25,7 +27,7 @@ producoes = {
     18:['G', 2, 'L'],
     19:['G', 2, 'L'],
     20:['H', 16, ''],
-    21:['H', 14, ''],
+    21:['H', 14, 'R'],
     22:['I', 6, 'G'],
     23:['I', 6, 'G'],
     24:['I', 10, 'F'],
@@ -149,33 +151,6 @@ def passagem_valor(var_esquerda, tipo_esquerda, var_direita, tabela_simbolos, li
         else:
             buffer_semantico.append("ERRO NO COMPILADOR. PASSAGEM DE VALOR.")
             return ''
-        """
-        elif is_bool(tipo_esquerda):
-            if is_bool(tipo_direita):
-                return valor_direita
-            else:
-                print_atrib_incompativel(linha)
-                return ''
-        elif is_int(tipo_esquerda):
-            if valor_direita.replace('.','',1).isdigit():
-                if valor_direita == 'input':
-                    return str(valor_direita)
-                else:
-                    return str(int(valor_direita))
-            else:
-                print_atrib_incompativel(linha)
-                return ''
-        elif is_real(tipo_esquerda):
-            if valor_direita.replace('.','',1).isdigit():
-                if valor_direita == 'input':
-                    return str(valor_direita)
-                else:
-                    return str(float(valor_direita))
-            else:
-                print_atrib_incompativel(linha)
-                return ''
-        """
-        
         
 def ad_tab_simb(pilha, nome, tipo, valor, tabela_simbolos, linha):
     for ele in pilha[::-1]:
@@ -657,9 +632,38 @@ def three_add_input_trem(trem, tabela_simbolos):
     else:
         return trem
 
+
+
+def three_add_fim_if():
+    global gen_buffer, label_var_counter
+    for i in range(len(gen_buffer),0,-1):
+        if gen_buffer[i-1] == 'goto LX\n':
+            gen_buffer[i-1] = f"goto L{label_var_counter-1}\n"
+        elif gen_buffer[i-1] == 'goto LXIF\n':
+            gen_buffer[i-1] = f"goto L{label_var_counter-1}\n" 
+            break   
+            
+def three_add_end_block():
+    global label_queue, in_block, label_var_counter,if_counter
+    if in_block=='if':
+        label = label_queue[if_counter-1].pop(0)
+        gen(f"goto LXIF")
+        gen(f"L{label}:")
+        in_block = ''
+    elif in_block=='elif':
+        label = label_queue[if_counter-1].pop(0)
+        gen(f"goto LX")
+        gen(f"L{label}:")
+        in_block = ''
+    elif in_block=='else':
+        gen(f"goto L{label_var_counter}")
+        gen(f"L{label_var_counter}:")
+        label_var_counter += 1
+        in_block = ''
+        three_add_fim_if()
+
 def gen(linha_add):
-    with open("output_code.txt", 'a') as outuput_code: 
-        outuput_code.write(linha_add + '\n')
+    gen_buffer.append(linha_add + '\n')
 
 def aplica_regra_semantica(pilha, tabela_simbolos, regra_semantica, linha):
     if regra_semantica=='A':
@@ -720,9 +724,10 @@ def aplica_regra_semantica(pilha, tabela_simbolos, regra_semantica, linha):
         three_add_print(pilha[-4][1])
         return '',''
     elif regra_semantica=='O':
-        checa_variavel(pilha, tabela_simbolos, linha)
-        value = three_add_input_trem(pilha[-2][1], tabela_simbolos)
-        return value, 'string'
+        valor, tipo = checa_variavel(pilha, tabela_simbolos, linha)
+        if valor[1] == 'r':
+            valor = valor[5:]
+        return valor, 'string'
     elif regra_semantica=='P':
         #operacao aritmetica prod 36
         valorx, tipo = opBin(pilha[-4][1], pilha[-8][1], pilha[-2][1], pilha[-8][2], pilha[-2][2], tabela_simbolos, linha)
@@ -737,8 +742,40 @@ def aplica_regra_semantica(pilha, tabela_simbolos, regra_semantica, linha):
         if valor == None:
             valor = valorx
         return valor, tipo
+    elif regra_semantica=='R':
+        three_add_fim_if()
+        return '',''
+    elif regra_semantica=='S':
+        three_add_end_block()
+        return '',''
 
 def empilha(pilha, num_celula, a):
+    global label_var_counter, label_queue, in_block, if_counter
+    if a[0]=='if':
+        in_block = 'if'
+        if_counter += 1
+        label_queue.append([])
+    elif a[0]=='elif':
+        in_block = 'elif'
+    elif a[0]=='else':
+        in_block = 'else'
+        if_counter -= 1
+    elif a[0]=='while':
+        in_block = 'while'
+    elif a[0]=='{' and in_block=='if':
+        gen(f"if t{temp_var_counter-1} goto L{label_var_counter}")
+        gen(f"goto L{label_var_counter+1}")
+        gen(f"L{label_var_counter}:")
+        label_var_counter += 1
+        label_queue[if_counter-1].append(label_var_counter)
+        label_var_counter += 1
+    elif a[0]=='{' and in_block=='elif':
+        gen(f"if t{temp_var_counter-1} goto L{label_var_counter}")
+        gen(f"goto L{label_var_counter+1}")
+        gen(f"L{label_var_counter}:")
+        label_var_counter += 1
+        label_queue[if_counter-1].append(label_var_counter)
+        label_var_counter += 1
     pilha.append(a)
     pilha.append(num_celula)
 
@@ -821,6 +858,10 @@ def sintatico():
 
     for erro in buffer_semantico:
         print(erro)
+
+    with open("output_code.txt", 'a') as outuput_code: 
+        for line in gen_buffer:
+            outuput_code.write(line)
 
     print("-"*5+"Análise semântica finalizada!"+"-"*5)
 

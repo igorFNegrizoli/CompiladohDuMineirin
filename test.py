@@ -1,7 +1,4 @@
-x = []
+x =[1,2,3,4,5,6]
 
-linha = 2
-y=f"ERRO NA LINHA {linha}. ATRIBUIÇÃO NÃO COMPATÍVEL PARA AS VARIÁVEIS UTILIZADAS."
-x.append(y)
-print(y)
-print(x)
+for i in range(len(x),0,-1):
+    print(i)
