@@ -8,7 +8,7 @@ di_prosa  trem_P eh "Pikachu"    		oia string com tabs
 
 espiah_soh("Insira um valor inteiro")
 xove(trem_Y)
-
+xove(trem_S)
 espiah_soh((v ou trem_R) i (trem_S capaz (neim trem_R)))
 
 di_midih trem_C

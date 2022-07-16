@@ -13,25 +13,47 @@ P = t5
 printf "Insira um valor inteiro"
 t6 = scanf
 Y = t6
-printf f
-t7 = C
-D = t7
-printf "TREM C: 5.2"
-printf "TREM D: 5.2"
-printf "TREM C: 6.2"
-printf "TREM D: 4.2"
-printf 100
-printf f
-printf v
-t8 = scanf
-RUA = t8
-printf input
-printf 1
-t9 = 10000
-Z = t9
-t10 = Y
-X = t10
-t11 = Z
-X = t11
-printf 10100
+t7 = scanf
+S = t7
+t8 = 1 || R
+t9 = !R
+t10 = S ^ t9
+t11 = t8 && t10
+printf t11
+t12 = B + A
+t13 = C
+D = t13
+printf "TREM C: t12"
+printf "TREM D: "
+printf "TREM C: t12"
+printf "TREM D: "
+t14 = X * 10
+printf t14
+t15 = A >= B
+t16 = X <= Y
+t17 = t15 == t16
+t18 = 100 * B
+t19 = A > t18
+t19 = 100 * X
+t20 = t19 < Y
+t20 = t18 != t19
+printf t17
+printf t20
+t21 = X - Y
+printf t21
+t22 = 40 / 3
+t23 = t22 % 2
+printf t23
+t24 = 10000
+Z = t24
+t25 = X > Y
+t26 = Y
+X = t26
+t27 = X < Z
+t28 = Z
+X = t28
+t29 = Y + Z
+printf t29
+t30 = (float) X
+t31 = A == t30
 printf "A eh igual a X."

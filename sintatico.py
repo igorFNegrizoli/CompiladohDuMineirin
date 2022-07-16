@@ -40,9 +40,9 @@ producoes = {
     33:['N', 2 , ''],
     34:['N', 6, 'E'],
     35:['N', 6, 'E'],
-    36:['O', 10, 'F'],
-    37:['O', 6, 'G'],
-    38:['O', 6, 'G'],
+    36:['O', 10, 'P'],
+    37:['O', 6, 'Q'],
+    38:['O', 6, 'Q'],
     39:['O', 8, 'I'],
     40:['O', 4, 'J'],
     41:['O', 4, 'J'],
@@ -185,8 +185,6 @@ def ad_tab_simb(pilha, nome, tipo, valor, tabela_simbolos, linha):
     tipo_tab, valor_tab, i = find_in_tab_simb(nome, tabela_simbolos)
     var_declarada = (i!=-1)
 
-    valor_old = valor
-
     if valor[:4]=='trem':
         valor = passagem_valor(nome, tipo, valor, tabela_simbolos, linha, var_declarada)
 
@@ -242,9 +240,11 @@ def opUn(operador, valor, tipo_operando, tabela_simbolos, linha):
             if valor == 'input':
                 return 'input' 
             elif is_int(tipo_operando):
-                return str(int(valor)+1), 'int'
+                #return str(int(valor)+1), 'int'
+                return '', 'int'
             else:
-                return str(float(valor)+1.0), 'real'
+                #return str(float(valor)+1.0), 'real'
+                return '', 'real'
         else:
             print_tipo_nao_suportado(linha, tipo_operando, operador)
     elif operador=='menos_um_cadin':
@@ -252,9 +252,11 @@ def opUn(operador, valor, tipo_operando, tabela_simbolos, linha):
             if valor == 'input':
                 return 'input'  
             elif is_int(tipo_operando):
-                return str(int(valor)-1), 'int'
+                #return str(int(valor)-1), 'int'
+                return '', 'int'
             else:
-                return str(float(valor)-1.0), 'real'
+                #return str(float(valor)-1.0), 'real'
+                return '', 'real'
         else:
             print_tipo_nao_suportado(linha, tipo_operando, operador)
     else:
@@ -310,27 +312,36 @@ def opBin(operador, valor1, valor2, tipo_valor1, tipo_valor2, tabela_simbolos, l
                 if valor1=='input' or valor2=='input':
                     return 'input', 'int'
                 elif operador=='ajunta':
-                    return str(int(valor1)+int(valor2)), 'int'
+                    #return str(int(valor1)+int(valor2)), 'int'
+                    return '', 'int'
                 elif operador=='arranca':
-                    return str(int(valor1)-int(valor2)), 'int'
+                    #return str(int(valor1)-int(valor2)), 'int'
+                    return '', 'int'
                 elif operador=='veiz':
-                    return str(int(valor1)*int(valor2)), 'int'
+                    #return str(int(valor1)*int(valor2)), 'int'
+                    return '', 'int'
                 elif operador=='cascah':
-                    return str(int(valor1)//int(valor2)), 'int'
+                    #return str(int(valor1)//int(valor2)), 'int'
+                    return '', 'int'
                 else:
-                    return str(int(valor1)%int(valor2)), 'int'
+                    #return str(int(valor1)%int(valor2)), 'int'
+                    return '', 'int'
             else:
                 #Se uma variável é Int, converte Int para Float
                 if valor1=='input' or valor2=='input':
                     return 'input', 'real'
                 elif operador=='ajunta':
-                    return str(float(valor1)+float(valor2)), 'real'
+                    #return str(float(valor1)+float(valor2)), 'real'
+                    return '', 'real'
                 elif operador=='arranca':
-                    return str(float(valor1)-float(valor2)), 'real'
+                    #return str(float(valor1)-float(valor2)), 'real'
+                    return '', 'real'
                 elif operador=='veiz':
-                    return str(float(valor1)*float(valor2)), 'real'
+                    #return str(float(valor1)*float(valor2)), 'real'
+                    return '', 'real'
                 elif operador=='cascah':
-                    return str(float(valor1)/float(valor2)), 'real'
+                    #return str(float(valor1)/float(valor2)), 'real'
+                    return '', 'real'
                 elif is_real(tipo_valor1):
                     print_tipo_nao_suportado(linha, tipo_valor1, operador)
                 else:
@@ -344,32 +355,42 @@ def opBin(operador, valor1, valor2, tipo_valor1, tipo_valor2, tabela_simbolos, l
             print_tipo_nao_suportado(linha, tipo_valor2, operador)
         else:
             if operador=='maioh':
-                return bool_to_minerin(float(valor1)>float(valor2)), 'bool'
+                #return bool_to_minerin(float(valor1)>float(valor2)), 'bool'
+                return '', 'bool'
             elif operador=='menoh':
-                return bool_to_minerin(float(valor1)<float(valor2)), 'bool'
+                #return bool_to_minerin(float(valor1)<float(valor2)), 'bool'
+                return '', 'bool'
             elif operador=='maioh_qui_nem':
-                return bool_to_minerin(float(valor1)>=float(valor2)), 'bool'
+                #return bool_to_minerin(float(valor1)>=float(valor2)), 'bool'
+                return '', 'bool'
             elif operador=='menoh_qui_nem':
-                return bool_to_minerin(float(valor1)<=float(valor2)), 'bool'
+                #return bool_to_minerin(float(valor1)<=float(valor2)), 'bool'
+                return '', 'bool'
             elif operador=='dimais_da_conta':
-                return bool_to_minerin(float(valor1)>(100*float(valor2))), 'bool'
+                #return bool_to_minerin(float(valor1)>(100*float(valor2))), 'bool'
+                return '', 'bool'
             else:
-                return bool_to_minerin(float(valor1)<(100*float(valor2))), 'bool'
+                #return bool_to_minerin(float(valor1)<(100*float(valor2))), 'bool'
+                return '', 'bool'
     elif operador in operadores_relacionais:
         if is_real(tipo_valor1):
             if is_number(tipo_valor2) or valor2.replace('.','',1).isdigit():
                 if operador=='qui_nem':
-                    return bool_to_minerin(float(valor1)==float(valor2)), 'bool'
+                    #return bool_to_minerin(float(valor1)==float(valor2)), 'bool'
+                    return '', 'bool'
                 elif operador=='num_eh':
-                    return bool_to_minerin(float(valor1)!=float(valor2)), 'bool'
+                    #return bool_to_minerin(float(valor1)!=float(valor2)), 'bool'
+                    return '', 'bool'
             else:
                 print_tipo_nao_suportado(linha, tipo_valor2, operador)
         elif is_int(tipo_valor1):
             if is_number(tipo_valor2) or valor2.replace('.','',1).isdigit():
                 if operador=='qui_nem':
-                    return bool_to_minerin(float(valor1)==float(valor2)), 'bool'
+                    #return bool_to_minerin(float(valor1)==float(valor2)), 'bool'
+                    return '', 'bool'
                 elif operador=='num_eh':
-                    return bool_to_minerin(float(valor1)!=float(valor2)), 'bool'
+                    #return bool_to_minerin(float(valor1)!=float(valor2)), 'bool'
+                    return '', 'bool'
             else:
                 print_tipo_nao_suportado(linha, tipo_valor2, operador)
         else:
@@ -378,9 +399,11 @@ def opBin(operador, valor1, valor2, tipo_valor1, tipo_valor2, tabela_simbolos, l
             elif is_int(tipo_valor2):
                 valor2 = str(int(valor2))
             if operador=='qui_nem':
-                return bool_to_minerin(valor1==valor2), 'bool'
+                #return bool_to_minerin(valor1==valor2), 'bool'
+                return '', 'bool'
             elif operador=='num_eh':
-                return bool_to_minerin(valor1!=valor2), 'bool'
+                #return bool_to_minerin(valor1!=valor2), 'bool'
+                return '', 'bool'
         
     else:
         buffer_semantico.append("ERRO NO COMPILADOR. OPERAÇÃO BINÁRIA.")
@@ -449,6 +472,137 @@ def get_valor(operando):
     
     return operando
 
+def three_add_producao_opAritUn(nome1, operador, tabela_simbolos):
+    global temp_var_counter
+    tipo1, valor1, indice1 = find_in_tab_simb(nome1, tabela_simbolos)
+
+    if indice1 != -1:
+        nome1 = nome1[5:]  
+    if operador == 'mais_um_cadin':
+        gen(f"t{temp_var_counter} = {nome1}++")  
+    elif operador == 'menos_um_cadin':
+        gen(f"t{temp_var_counter} = {nome1}--")  
+    temp_var_counter += 1
+    return 't'+str(temp_var_counter-1) 
+
+def three_add_producao_opLogUn(nome1, tabela_simbolos):
+    global temp_var_counter
+    tipo1, valor1, indice1 = find_in_tab_simb(nome1, tabela_simbolos)
+
+    if nome1 == 'v':
+        nome1 = 1
+    elif nome1 == 'f':
+        nome1 = 0
+
+    if indice1 != -1:
+        nome1 = nome1[5:]    
+    gen(f"t{temp_var_counter} = !{nome1}")
+    temp_var_counter += 1
+    return 't'+str(temp_var_counter-1)
+
+def three_add_producao_opBin(nome1, nome2, operacao, tabela_simbolos):
+    global temp_var_counter
+    operadores_logicos = ['i', 'ou', 'capaz']
+    operadores_aritmeticos = ['ajunta', 'arranca', 'veiz', 'cascah', 'sobra']
+    operadores_relacionais_numericos = ['maioh', 'menoh', 'maioh_qui_nem', 'menoh_qui_nem']
+    operadores_relacionais = ['qui_nem', 'num_eh']
+
+    dict_op = {
+        'i': '&&',
+        'ou': '||',
+        'capaz': '^',
+        'ajunta': '+',
+        'arranca': '-',
+        'veiz': '*',
+        'cascah': '/',
+        'sobra': '%',
+        'maioh': '>',
+        'menoh': '<',
+        'maioh_qui_nem': '>=',
+        'menoh_qui_nem': '<=',
+        'qui_nem': '==',
+        'num_eh': '!='
+    }
+
+    tipo1, valor1, indice1 = find_in_tab_simb(nome1, tabela_simbolos)
+    tipo2, valor2, indice2 = find_in_tab_simb(nome2, tabela_simbolos)
+    if nome1 == 'v':
+        nome1 = 1
+    elif nome1 == 'f':
+        nome1 = 0
+    
+    if nome2 == 'v':
+        nome2 = 1
+    elif nome2 == 'f':
+        nome2 = 0
+
+    if indice1 != -1:
+        nome1 = nome1[5:]
+    if indice2 != -1:
+        nome2 = nome2[5:]
+
+    if operacao in operadores_logicos:
+        gen(f"t{temp_var_counter} = {nome1} {dict_op[operacao]} {nome2}")
+        temp_var_counter += 1
+        return 't'+str(temp_var_counter-1)
+    elif operacao == 'dimais_da_conta':
+        if is_real(tipo1) and is_int(tipo2):
+            gen(f"t{temp_var_counter} = (float) {nome2}")
+            nome2 = f't{temp_var_counter}' 
+            temp_var_counter += 1
+        elif is_real(tipo2) and is_int(tipo1):
+            gen(f"t{temp_var_counter} = (float) {nome1}")
+            nome1 = f't{temp_var_counter}' 
+            temp_var_counter += 1
+        gen(f"t{temp_var_counter} = 100 * {nome2}")
+        temp_var_counter += 1
+        gen(f"t{temp_var_counter} = {nome1} > t{temp_var_counter-1}")
+        return 't'+str(temp_var_counter-1)
+    elif operacao == 'dimenos_da_conta':
+        if is_real(tipo1) and is_int(tipo2):
+            gen(f"t{temp_var_counter} = (float) {nome2}")
+            nome2 = f't{temp_var_counter}' 
+            temp_var_counter += 1
+        elif is_real(tipo2) and is_int(tipo1):
+            gen(f"t{temp_var_counter} = (float) {nome1}")
+            nome1 = f't{temp_var_counter}' 
+            temp_var_counter += 1
+        gen(f"t{temp_var_counter} = 100 * {nome1}")
+        temp_var_counter += 1
+        gen(f"t{temp_var_counter} = t{temp_var_counter-1} < {nome2}")
+        return 't'+str(temp_var_counter-1)
+    elif operacao in operadores_relacionais_numericos or operacao in operadores_aritmeticos:
+        if is_real(tipo1) and is_int(tipo2):
+            gen(f"t{temp_var_counter} = (float) {nome2}")
+            nome2 = f't{temp_var_counter}' 
+            temp_var_counter += 1
+        elif is_real(tipo2) and is_int(tipo1):
+            gen(f"t{temp_var_counter} = (float) {nome1}")
+            nome1 = f't{temp_var_counter}' 
+            temp_var_counter += 1
+        gen(f"t{temp_var_counter} = {nome1} {dict_op[operacao]} {nome2}")
+        temp_var_counter += 1
+        return 't'+str(temp_var_counter-1)
+    elif operacao in operadores_relacionais:
+        if (is_real(tipo1) and is_int(tipo2)) or (is_string(tipo2) and is_real(tipo1)):
+            gen(f"t{temp_var_counter} = (float) {nome2}")
+            nome2 = f't{temp_var_counter}' 
+            temp_var_counter += 1
+        elif is_real(tipo2) and is_int(tipo1):
+            gen(f"t{temp_var_counter} = (float) {nome1}")
+            nome1 = f't{temp_var_counter}' 
+            temp_var_counter += 1
+        elif is_string(tipo2) and is_int(tipo1):
+            gen(f"t{temp_var_counter} = (int) {nome2}")
+            nome2 = f't{temp_var_counter}' 
+            temp_var_counter += 1
+        
+        gen(f"t{temp_var_counter} = {nome1} {dict_op[operacao]} {nome2}")
+        temp_var_counter += 1
+        return 't'+str(temp_var_counter-1)
+
+    pass
+
 def three_add_producao_e(trem1, trem2, tabela_simbolos):
     tipo1, valor1, indice1 = find_in_tab_simb(trem1, tabela_simbolos)
     tipo2, valor2, indice2 = find_in_tab_simb(trem2, tabela_simbolos)
@@ -457,7 +611,7 @@ def three_add_producao_e(trem1, trem2, tabela_simbolos):
     if is_int(tipo1) and (is_real(tipo2) or is_string(tipo2)):
         cast = ' (int)'
     elif is_real(tipo1) and (is_int(tipo2) or is_string(tipo2)):
-        cast = ' (real)'
+        cast = ' (float)'
     elif is_string(tipo1) and not is_string(tipo2):
         cast = ' (string)'
 
@@ -517,15 +671,34 @@ def aplica_regra_semantica(pilha, tabela_simbolos, regra_semantica, linha):
     elif regra_semantica=='E':
         return ad_tab_simb(pilha, pilha[-6][1], '', pilha[-2][1], tabela_simbolos, linha)
     elif regra_semantica=='F':
-        return opBin(pilha[-4][1], pilha[-8][1], pilha[-2][1], pilha[-8][2], pilha[-2][2], tabela_simbolos, linha)
+        #operacao logica prod 24
+        valorx, tipo = opBin(pilha[-4][1], pilha[-8][1], pilha[-2][1], pilha[-8][2], pilha[-2][2], tabela_simbolos, linha)
+        valor = three_add_producao_opBin(pilha[-8][1], pilha[-2][1], pilha[-4][1], tabela_simbolos)
+        if valor == None:
+            valor = valorx
+        return valor, tipo
     elif regra_semantica=='G':
-        return opBin(pilha[-4][1], pilha[-6][1], pilha[-2][1], pilha[-6][2], pilha[-2][2], tabela_simbolos, linha)
+        #operaçao logica prod 22 e 23
+        valorx, tipo = opBin(pilha[-4][1], pilha[-6][1], pilha[-2][1], pilha[-6][2], pilha[-2][2], tabela_simbolos, linha)
+        valor = three_add_producao_opBin(pilha[-6][1], pilha[-2][1], pilha[-4][1], tabela_simbolos)
+        if valor == None:
+            valor = valorx
+        return valor, tipo
     elif regra_semantica=='H':
-        return opUn(pilha[-4][1], pilha[-2][1], pilha[-2][2], tabela_simbolos, linha)
+        #prod logica prod 25
+        _, tipo = opUn(pilha[-4][1], pilha[-2][1], pilha[-2][2], tabela_simbolos, linha)
+        valor = three_add_producao_opLogUn(pilha[-2][1], tabela_simbolos)
+        return valor, tipo
     elif regra_semantica=='I':
-        return opUn(pilha[-2][1], pilha[-6][1], pilha[-6][2], tabela_simbolos, linha)
+        #operçao aritmetica prod 39
+        valor, tipo = opUn(pilha[-2][1], pilha[-6][1], pilha[-6][2], tabela_simbolos, linha)
+        valor = three_add_producao_opAritUn(pilha[-6][1], pilha[-2][1], tabela_simbolos)
+        return valor, tipo
     elif regra_semantica=='J':
-        return opUn(pilha[-2][1], pilha[-4][1], pilha[-4][2], tabela_simbolos, linha)
+        #operacao aritmetica prod 40 e 41
+        valor, tipo = opUn(pilha[-2][1], pilha[-4][1], pilha[-4][2], tabela_simbolos, linha)
+        valor = three_add_producao_opAritUn(pilha[-4][1], pilha[-2][1], tabela_simbolos)
+        return valor, tipo
     elif regra_semantica=='K':
         return concat(pilha[-6][1], pilha[-2][1], tabela_simbolos)
     elif regra_semantica=='L':
@@ -539,6 +712,20 @@ def aplica_regra_semantica(pilha, tabela_simbolos, regra_semantica, linha):
         checa_variavel(pilha, tabela_simbolos, linha)
         value = three_add_input_trem(pilha[-2][1], tabela_simbolos)
         return value, 'string'
+    elif regra_semantica=='P':
+        #operacao aritmetica prod 36
+        valorx, tipo = opBin(pilha[-4][1], pilha[-8][1], pilha[-2][1], pilha[-8][2], pilha[-2][2], tabela_simbolos, linha)
+        valor = three_add_producao_opBin(pilha[-8][1], pilha[-2][1], pilha[-4][1], tabela_simbolos)
+        if valor == None:
+            valor = valorx
+        return valor, tipo
+    elif regra_semantica=='Q':
+        #op aritmetica prod 37 e 38
+        valorx, tipo = opBin(pilha[-4][1], pilha[-6][1], pilha[-2][1], pilha[-6][2], pilha[-2][2], tabela_simbolos, linha)
+        valor = three_add_producao_opBin(pilha[-6][1], pilha[-2][1], pilha[-4][1], tabela_simbolos)
+        if valor == None:
+            valor = valorx
+        return valor, tipo
 
 def empilha(pilha, num_celula, a):
     pilha.append(a)
