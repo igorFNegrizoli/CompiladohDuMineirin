@@ -144,8 +144,12 @@ def passagem_valor(var_esquerda, tipo_esquerda, var_direita, tabela_simbolos, li
         buffer_semantico.append(f"ERRO NA LINHA {linha}. VARIAVEL {var_direita} NÃO DECLARADA.")
         return ''
     else:
-        if is_string(tipo_esquerda):
+        if is_type(tipo_esquerda):
             return str(valor_direita)
+        else:
+            buffer_semantico.append("ERRO NO COMPILADOR. PASSAGEM DE VALOR.")
+            return ''
+        """
         elif is_bool(tipo_esquerda):
             if is_bool(tipo_direita):
                 return valor_direita
@@ -170,9 +174,8 @@ def passagem_valor(var_esquerda, tipo_esquerda, var_direita, tabela_simbolos, li
             else:
                 print_atrib_incompativel(linha)
                 return ''
-        else:
-            buffer_semantico.append("ERRO NO COMPILADOR. PASSAGEM DE VALOR.")
-            return ''
+        """
+        
         
 def ad_tab_simb(pilha, nome, tipo, valor, tabela_simbolos, linha):
     for ele in pilha[::-1]:
@@ -181,7 +184,6 @@ def ad_tab_simb(pilha, nome, tipo, valor, tabela_simbolos, linha):
                 buffer_semantico.append(f"ERRO NA LINHA {linha}. VARIAVEL {nome} DECLARADA DENTRO DE LAÇO DE REPETIÇÃO.")
                 return '', ''
     
-
     tipo_tab, valor_tab, i = find_in_tab_simb(nome, tabela_simbolos)
     var_declarada = (i!=-1)
 
@@ -412,7 +414,8 @@ def opBin(operador, valor1, valor2, tipo_valor1, tipo_valor2, tabela_simbolos, l
         
 def concat(val1, val2, tabela_simbolos):
     tipo1, valor1, indice1 = find_in_tab_simb(val2, tabela_simbolos)
-    return val1[:-1]+valor1+val1[-1], 'string'
+    return val1+' , '+valor1, 'string'
+    
 
 def find_while(pilha, linha):
     for ele in pilha[::-1]:
@@ -557,6 +560,7 @@ def three_add_producao_opBin(nome1, nome2, operacao, tabela_simbolos):
         gen(f"t{temp_var_counter} = 100 * {nome2}")
         temp_var_counter += 1
         gen(f"t{temp_var_counter} = {nome1} > t{temp_var_counter-1}")
+        temp_var_counter += 1
         return 't'+str(temp_var_counter-1)
     elif operacao == 'dimenos_da_conta':
         if is_real(tipo1) and is_int(tipo2):
@@ -603,9 +607,11 @@ def three_add_producao_opBin(nome1, nome2, operacao, tabela_simbolos):
 
     pass
 
-def three_add_producao_e(trem1, trem2, tabela_simbolos):
+def three_add_producao_e(trem1, trem2, tabela_simbolos, tipo2temp=''):
     tipo1, valor1, indice1 = find_in_tab_simb(trem1, tabela_simbolos)
     tipo2, valor2, indice2 = find_in_tab_simb(trem2, tabela_simbolos)
+    if tipo2 == '':
+        tipo2 = tipo2temp
 
     cast = ''
     if is_int(tipo1) and (is_real(tipo2) or is_string(tipo2)):
@@ -626,9 +632,12 @@ def three_add_producao_e(trem1, trem2, tabela_simbolos):
         valor = trem2[5:]
 
     global temp_var_counter
-    gen(f"t{temp_var_counter} ={cast} {valor}")
-    gen(f"{trem1[5:]} = t{temp_var_counter}")
-    temp_var_counter += 1
+    if tipo2temp == '':
+        gen(f"t{temp_var_counter} ={cast} {valor}")
+        gen(f"{trem1[5:]} = t{temp_var_counter}")
+        temp_var_counter += 1
+    else:
+        gen(f"{trem1[5:]} = {trem2}")
 
     pass
 
@@ -669,7 +678,9 @@ def aplica_regra_semantica(pilha, tabela_simbolos, regra_semantica, linha):
         three_add_input(pilha[-4][1])
         return '', ''
     elif regra_semantica=='E':
-        return ad_tab_simb(pilha, pilha[-6][1], '', pilha[-2][1], tabela_simbolos, linha)
+        ad_tab_simb(pilha, pilha[-6][1], '', pilha[-2][1], tabela_simbolos, linha)
+        three_add_producao_e(pilha[-6][1], pilha[-2][1], tabela_simbolos, pilha[-2][2])
+        return '', ''
     elif regra_semantica=='F':
         #operacao logica prod 24
         valorx, tipo = opBin(pilha[-4][1], pilha[-8][1], pilha[-2][1], pilha[-8][2], pilha[-2][2], tabela_simbolos, linha)

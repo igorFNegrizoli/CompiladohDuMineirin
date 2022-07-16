@@ -21,39 +21,50 @@ t10 = S ^ t9
 t11 = t8 && t10
 printf t11
 t12 = B + A
+C = t12
 t13 = C
 D = t13
-printf "TREM C: t12"
-printf "TREM D: "
-printf "TREM C: t12"
-printf "TREM D: "
-t14 = X * 10
-printf t14
-t15 = A >= B
-t16 = X <= Y
-t17 = t15 == t16
-t18 = 100 * B
-t19 = A > t18
-t19 = 100 * X
-t20 = t19 < Y
-t20 = t18 != t19
-printf t17
-printf t20
-t21 = X - Y
-printf t21
-t22 = 40 / 3
-t23 = t22 % 2
+printf "TREM C: " , t12
+printf "TREM D: " , t12
+t14 = C++
+C = t14
+t15 = D--
+D = t15
+printf "TREM C: " , t14
+printf "TREM D: " , t15
+t16 = X * 10
+Y = t16
+printf t16
+t17 = A >= B
+t18 = X <= Y
+t19 = t17 == t18
+T = t19
+t20 = 100 * B
+t21 = A > t20
+t22 = 100 * X
+t23 = t22 < Y
+t23 = t21 != t22
+U = t23
+printf t19
 printf t23
-t24 = 10000
-Z = t24
-t25 = X > Y
-t26 = Y
-X = t26
-t27 = X < Z
-t28 = Z
-X = t28
-t29 = Y + Z
-printf t29
-t30 = (float) X
-t31 = A == t30
+t24 = X - Y
+printf t24
+t25 = 40 / 3
+t26 = t25 % 2
+printf t26
+t27 = 10000
+Z = t27
+t28 = X > Y
+t29 = Y
+X = t29
+t30 = X < Z
+t31 = Z
+X = t31
+t32 = Y + Z
+X = t32
+printf t32
+t33 = A++
+A = t33
+t34 = (float) X
+t35 = A == t34
 printf "A eh igual a X."
