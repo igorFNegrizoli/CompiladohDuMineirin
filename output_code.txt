@@ -68,27 +68,47 @@ goto L3
 L2:
 t31 = Y
 X = t31
-goto L6
+goto L11
 L3:
 t32 = X > Z
 if t32 goto L4
 goto L5
 L4:
 printf R
-goto L6
-L5:
-t33 = Y + Z
-X = t33
-goto L6
+t33 = X < Y
+if t33 goto L6
+goto L7
 L6:
-printf X
-t34 = A++
-A = t34
-t35 = (float) X
-t36 = A == t35
-if t36 goto L7
-goto L8
+t34 = Y
+X = t34
+goto L10
 L7:
-printf "A eh igual a X."
-goto L8
+t35 = X < Z
+if t35 goto L8
+goto L9
 L8:
+printf R
+goto L10
+L9:
+t36 = Y + Z
+X = t36
+goto L10
+L10:
+printf P
+goto L11
+L5:
+t37 = Y + Z
+X = t37
+goto L11
+L11:
+printf X
+t38 = A++
+A = t38
+t39 = (float) X
+t40 = A == t39
+if t40 goto L12
+goto L13
+L12:
+printf "A eh igual a X."
+goto L13
+L13:

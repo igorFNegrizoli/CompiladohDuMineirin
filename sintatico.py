@@ -3,7 +3,7 @@ import pandas as pd
 temp_var_counter, label_var_counter, if_counter = 0,0,0
 label_queue = []
 gen_buffer = []
-in_block = ''
+in_block = []
 
 producoes = {
     0: ['X', 2, ''],
@@ -645,22 +645,23 @@ def three_add_fim_if():
             
 def three_add_end_block():
     global label_queue, in_block, label_var_counter,if_counter
-    if in_block=='if':
-        label = label_queue[if_counter-1].pop(0)
-        gen(f"goto LXIF")
-        gen(f"L{label}:")
-        in_block = ''
-    elif in_block=='elif':
-        label = label_queue[if_counter-1].pop(0)
-        gen(f"goto LX")
-        gen(f"L{label}:")
-        in_block = ''
-    elif in_block=='else':
-        gen(f"goto L{label_var_counter}")
-        gen(f"L{label_var_counter}:")
-        label_var_counter += 1
-        in_block = ''
-        three_add_fim_if()
+    if len(in_block)>0:
+        if in_block[-1]=='if':
+            label = label_queue[if_counter-1].pop(0)
+            gen(f"goto LXIF")
+            gen(f"L{label}:")
+            in_block.pop(-1)
+        elif in_block[-1]=='elif':
+            label = label_queue[if_counter-1].pop(0)
+            gen(f"goto LX")
+            gen(f"L{label}:")
+            in_block.pop(-1)
+        elif in_block[-1]=='else':
+            gen(f"goto L{label_var_counter}")
+            gen(f"L{label_var_counter}:")
+            label_var_counter += 1
+            in_block.pop(-1)
+            three_add_fim_if()
 
 def gen(linha_add):
     gen_buffer.append(linha_add + '\n')
@@ -752,24 +753,24 @@ def aplica_regra_semantica(pilha, tabela_simbolos, regra_semantica, linha):
 def empilha(pilha, num_celula, a):
     global label_var_counter, label_queue, in_block, if_counter
     if a[0]=='if':
-        in_block = 'if'
+        in_block.append('if')
         if_counter += 1
         label_queue.append([])
     elif a[0]=='elif':
-        in_block = 'elif'
+        in_block.append('elif')
     elif a[0]=='else':
-        in_block = 'else'
+        in_block.append('else')
         if_counter -= 1
     elif a[0]=='while':
-        in_block = 'while'
-    elif a[0]=='{' and in_block=='if':
+        in_block.append('while')
+    elif a[0]=='{' and in_block[-1]=='if':
         gen(f"if t{temp_var_counter-1} goto L{label_var_counter}")
         gen(f"goto L{label_var_counter+1}")
         gen(f"L{label_var_counter}:")
         label_var_counter += 1
         label_queue[if_counter-1].append(label_var_counter)
         label_var_counter += 1
-    elif a[0]=='{' and in_block=='elif':
+    elif a[0]=='{' and in_block[-1]=='elif':
         gen(f"if t{temp_var_counter-1} goto L{label_var_counter}")
         gen(f"goto L{label_var_counter+1}")
         gen(f"L{label_var_counter}:")

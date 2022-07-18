@@ -48,6 +48,16 @@ tem_cabimento(trem_X maioh trem_Y){
 }
 e_tem_cabimento(trem_X maioh trem_Z){
 	espiah_soh(trem_R)
+	tem_cabimento(trem_X menoh trem_Y){
+		trem_X eh trem_Y
+	}
+	e_tem_cabimento(trem_X menoh trem_Z){
+		espiah_soh(trem_R)
+	}
+	num_tem_cabimento{
+		trem_X eh trem_Y ajunta trem_Z
+	}
+	espiah_soh(trem_P)
 }
 num_tem_cabimento{
     trem_X eh trem_Y ajunta trem_Z
