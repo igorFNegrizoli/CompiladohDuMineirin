@@ -4,6 +4,7 @@ temp_var_counter, label_var_counter, if_counter = 0,0,0
 label_queue = []
 gen_buffer = []
 in_block = []
+while_label_stack = []
 
 producoes = {
     0: ['X', 2, ''],
@@ -51,7 +52,7 @@ producoes = {
     42:['P', 6, 'M'],
     43:['P', 2, 'L'],
     44:['P', 2, 'L'],
-    45:['R', 8, ''],
+    45:['R', 8, 'T'],
     46:['S', 8, 'N'],
     47:['S', 8, 'D'],
     48:['T', 2, 'L'],
@@ -389,13 +390,14 @@ def opBin(operador, valor1, valor2, tipo_valor1, tipo_valor2, tabela_simbolos, l
         
 def concat(val1, val2, tabela_simbolos):
     tipo1, valor1, indice1 = find_in_tab_simb(val2, tabela_simbolos)
-    return val1+' , '+valor1, 'string'
+    return val1+'\nprintf '+valor1, 'string'
     
 
 def find_while(pilha, linha):
     for ele in pilha[::-1]:
         if type(ele) != int:
             if ele[0] == 'while':
+                gen(f"goto LW{len(while_label_stack)}")
                 return '', ''
     buffer_semantico.append(f"ERRO NA LINHA {linha}. pica_mula FORA DE UM vai_toda_vida.")   
     return '', ''
@@ -549,6 +551,7 @@ def three_add_producao_opBin(nome1, nome2, operacao, tabela_simbolos):
         gen(f"t{temp_var_counter} = 100 * {nome1}")
         temp_var_counter += 1
         gen(f"t{temp_var_counter} = t{temp_var_counter-1} < {nome2}")
+        temp_var_counter += 1
         return 't'+str(temp_var_counter-1)
     elif operacao in operadores_relacionais_numericos or operacao in operadores_aritmeticos:
         if is_real(tipo1) and is_int(tipo2):
@@ -624,6 +627,7 @@ def three_add_input(trem):
 
 def three_add_print(T):
     gen(f"printf {T}")
+    gen("printf \\n")
 
 def three_add_input_trem(trem, tabela_simbolos):
     tipo1, valor1, indice1 = find_in_tab_simb(trem, tabela_simbolos)
@@ -631,8 +635,6 @@ def three_add_input_trem(trem, tabela_simbolos):
         return valor1
     else:
         return trem
-
-
 
 def three_add_fim_if():
     global gen_buffer, label_var_counter
@@ -642,9 +644,39 @@ def three_add_fim_if():
         elif gen_buffer[i-1] == 'goto LXIF\n':
             gen_buffer[i-1] = f"goto L{label_var_counter-1}\n" 
             break   
-            
+
+def three_add_fim_while():
+    global gen_buffer, label_var_counter
+
+    for i in range(len(gen_buffer),0,-1):
+        if gen_buffer[i-1] == f"goto LW{len(while_label_stack)}\n":
+            gen_buffer[i-1] = f"goto L{label_var_counter}\n"
+
+def has_B_in_block(pilha):
+    has_B = False
+    for i in range(len(pilha)-1,0,-2):
+        token = pilha[i-1]
+        if token[0]=='{':
+            if has_B:
+                return has_B
+            else:
+                return has_B
+        elif token[0]=='B':
+            has_B = True
+    return False
+
+def three_add_reducao_while():
+    global in_block, label_var_counter, while_label_stack
+
+    three_add_fim_while()
+    gen(f"goto L{while_label_stack.pop(-1)}")
+    in_block.pop(-1)
+    gen(f"L{label_var_counter}:")
+    label_var_counter += 1
+    
+
 def three_add_end_block():
-    global label_queue, in_block, label_var_counter,if_counter
+    global label_queue, in_block, label_var_counter,if_counter,while_label_stack
     if len(in_block)>0:
         if in_block[-1]=='if':
             label = label_queue[if_counter-1].pop(0)
@@ -662,6 +694,7 @@ def three_add_end_block():
             label_var_counter += 1
             in_block.pop(-1)
             three_add_fim_if()
+            
 
 def gen(linha_add):
     gen_buffer.append(linha_add + '\n')
@@ -749,6 +782,9 @@ def aplica_regra_semantica(pilha, tabela_simbolos, regra_semantica, linha):
     elif regra_semantica=='S':
         three_add_end_block()
         return '',''
+    elif regra_semantica=='T':
+        three_add_reducao_while()
+        return '',''
 
 def empilha(pilha, num_celula, a):
     global label_var_counter, label_queue, in_block, if_counter
@@ -776,6 +812,10 @@ def empilha(pilha, num_celula, a):
         gen(f"L{label_var_counter}:")
         label_var_counter += 1
         label_queue[if_counter-1].append(label_var_counter)
+        label_var_counter += 1
+    elif a[0]=='{' and in_block[-1]=='while':
+        gen(f"L{label_var_counter}:")
+        while_label_stack.append(label_var_counter)
         label_var_counter += 1
     pilha.append(a)
     pilha.append(num_celula)

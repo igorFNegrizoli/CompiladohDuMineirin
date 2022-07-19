@@ -11,6 +11,7 @@ S = t4
 t5 = (string) "Pikachu"
 P = t5
 printf "Insira um valor inteiro"
+printf \n
 t6 = scanf
 Y = t6
 t7 = scanf
@@ -20,21 +21,31 @@ t9 = !R
 t10 = S ^ t9
 t11 = t8 && t10
 printf t11
+printf \n
 t12 = B + A
 C = t12
 t13 = C
 D = t13
-printf "TREM C: " , t12
-printf "TREM D: " , t12
+printf "TREM C: "
+printf t12
+printf \n
+printf "TREM D: "
+printf t12
+printf \n
 t14 = C++
 C = t14
 t15 = D--
 D = t15
-printf "TREM C: " , t14
-printf "TREM D: " , t15
+printf "TREM C: "
+printf t14
+printf \n
+printf "TREM D: "
+printf t15
+printf \n
 t16 = X * 10
 Y = t16
 printf Y
+printf \n
 t17 = A >= B
 t18 = X <= Y
 t19 = t17 == t18
@@ -43,72 +54,104 @@ t20 = 100 * B
 t21 = A > t20
 t22 = 100 * X
 t23 = t22 < Y
-t23 = t21 != t22
-U = t23
+t24 = t21 != t23
+U = t24
 printf T
+printf \n
 printf U
-t24 = X - Y
-printf t24
-t25 = 40 / 3
-t26 = t25 % 2
-printf t26
-t27 = 10000
-Z = t27
-t28 = Z > X
-if t28 goto L0
+printf \n
+t25 = X - Y
+printf t25
+printf \n
+t26 = 40 / 3
+t27 = t26 % 2
+printf t27
+printf \n
+t28 = 10000
+Z = t28
+t29 = Z > X
+if t29 goto L0
 goto L1
 L0:
-t29 = Z - 10
-Z = t29
+t30 = Z - 10
+Z = t30
+t31 = Z - 10
+Z = t31
+t32 = Z - 10
+Z = t32
 goto L1
 L1:
-t30 = X > Y
-if t30 goto L2
+t33 = X > Y
+if t33 goto L2
 goto L3
 L2:
-t31 = Y
-X = t31
+t34 = Y
+X = t34
 goto L11
 L3:
-t32 = X > Z
-if t32 goto L4
+t35 = X > Z
+if t35 goto L4
 goto L5
 L4:
 printf R
-t33 = X < Y
-if t33 goto L6
+printf \n
+t36 = X < Y
+if t36 goto L6
 goto L7
 L6:
-t34 = Y
-X = t34
+t37 = Y
+X = t37
 goto L10
 L7:
-t35 = X < Z
-if t35 goto L8
+t38 = X < Z
+if t38 goto L8
 goto L9
 L8:
 printf R
+printf \n
 goto L10
 L9:
-t36 = Y + Z
-X = t36
+t39 = Y + Z
+X = t39
 goto L10
 L10:
 printf P
+printf \n
 goto L11
 L5:
-t37 = Y + Z
-X = t37
+t40 = Y + Z
+X = t40
 goto L11
 L11:
 printf X
-t38 = A++
-A = t38
-t39 = (float) X
-t40 = A == t39
-if t40 goto L12
-goto L13
+printf \n
 L12:
-printf "A eh igual a X."
-goto L13
+t41 = A++
+A = t41
+t42 = (float) X
+t43 = A == t42
+if t43 goto L13
+goto L14
 L13:
+printf "A eh igual a X."
+printf \n
+goto L19
+goto L14
+L14:
+L15:
+t44 = B++
+B = t44
+t45 = (float) X
+t46 = B == t45
+if t46 goto L16
+goto L17
+L16:
+printf "B eh igual a X."
+printf \n
+goto L18
+goto L17
+L17:
+goto L15
+L18:
+goto L12
+L19:

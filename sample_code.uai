@@ -41,6 +41,8 @@ di_contah trem_Z eh 10000
 
 tem_cabimento(trem_Z maioh trem_X){
 	trem_Z eh trem_Z arranca 10
+	trem_Z eh trem_Z arranca 10
+	trem_Z eh trem_Z arranca 10
 }
 
 tem_cabimento(trem_X maioh trem_Y){
@@ -69,6 +71,13 @@ vai_toda_vida{
 	tem_cabimento(trem_A qui_nem trem_X){
 		espiah_soh("A eh igual a X.")
 		pica_mula
+	}
+	vai_toda_vida{
+		trem_B eh trem_B mais_um_cadin
+		tem_cabimento(trem_B qui_nem trem_X){
+			espiah_soh("B eh igual a X.")
+			pica_mula
+		}
 	}
 }
 
